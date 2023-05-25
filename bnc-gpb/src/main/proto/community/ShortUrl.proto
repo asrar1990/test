@@ -1,0 +1,14 @@
+package community;
+option java_package = "com.bn.gpb.community";
+option java_outer_classname = "ShortUrl";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+
+message GetShortProductUrlRequestV1{
+	required string ean = 1;
+}
+
+message GetShortProductUrlResponseV1{
+	required string shortUrl = 1;
+}

@@ -1,0 +1,42 @@
+package com.bn.updateService.gbp;
+
+// TODO add download over wifi only flag somewhere
+
+option java_outer_classname = "UPSResponse";
+option optimize_for = LITE_RUNTIME;
+
+message RequestV1 {
+    optional string currentVersion = 1;
+}
+
+message ResponseV1 {
+    required int32 hasRelease = 1;
+    optional ReleaseV1 release = 2;
+}
+
+message ReleaseV1 {
+    required string nextVersion = 1;
+    required string checksum = 2;
+    required int64 filesize = 3;
+    required int64 chunkingFactor = 4;
+    repeated FileChunkV1 chunks = 5;
+    required string token = 6;
+    optional int32 priority = 7; // CLOUD-4474 update priority is set to 0 by default.
+}
+
+message FileChunkV1 {
+    required string url = 1;
+    required string checksum = 2;
+    required int64 obv = 3;
+}
+
+message StatusRequestV1 {
+    required int32 statusCode = 1;
+    optional string statusString = 2;
+    optional string currentVersion = 3;
+}
+
+message StatusResponseV1 {
+    required int32 statusCode = 1;
+}
+

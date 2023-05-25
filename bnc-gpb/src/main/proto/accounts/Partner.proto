@@ -1,0 +1,91 @@
+package partner;
+option java_package = "com.bn.gpb.partner";
+option java_outer_classname = "GpbPartner";
+option optimize_for = LITE_RUNTIME;
+
+import "accounts/Account.proto";
+
+//Retrieve Partner tokens
+message GetPartnerAuthRequestV1 {
+    required string partnerID=1;
+}
+
+message GetPartnerAuthResponseV1 {
+    repeated account.PartnerTokenV1 partnerToken=1;
+}
+
+
+//Authorize the device
+message AuthorizeClientRequestV1 {
+    required string partnerID=1;
+    optional string name=2;
+    optional string description=3;
+    optional string platformVersion=4;
+    optional string platform=5;
+    optional string os=6;
+    optional string osVersion=7;
+}
+message AuthorizeClientResponseV1 {
+    optional int32 status=1;
+}
+
+//DeAuthorize the device
+message DeAuthorizeClientRequestV1 {
+    required string partnerID=1;
+    repeated string deviceID=2;
+}
+message DeAuthorizeClientResponseV1 {
+    optional int32 status=1;
+    repeated string deviceID=2;
+}
+
+//Get Authorize Clients
+message GetAuthorizeClientsRequestV1 {
+   required string partnerID=1;
+}
+
+message GetAuthorizeClientsResponseV1 {
+   repeated PartnerClientInfoV1 clients=1;
+}
+
+message PartnerClientInfoV1 {
+   required string partnerID=1;
+   required string deviceID=2;
+   optional string deviceName=3;
+   optional string platform=4;
+   optional string platformDescription=5;
+   optional string platformVersion=6;
+   optional string operatingSystem=7;
+   optional string osVersion=8;
+   optional bool   isRegistered=9;
+}
+
+//sending partner linked information
+message SendLinkDetailRequestV1 {
+   required string partnerID=1;
+   required string linkToken=2;
+   optional string linkId=3;
+}
+
+message SendLinkDetailResponseV1 {
+   optional int32 status=1;
+}
+
+
+//determine if an account is uvlinked
+message IsUVLinkedRequestV1{
+}
+message IsUVLinkedResponseV1{
+    optional bool isLinked=1;
+}
+
+//Get partnerFormUrl
+message GetPartnerFormRequestV1 {
+    required string partner=1;
+    optional string linkedTo=2;
+    optional string redirect=3;
+}
+
+message GetPartnerFormResponseV1 {
+    optional string partnerForm=1;
+}

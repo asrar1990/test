@@ -1,0 +1,22 @@
+package dailyedition;
+option java_package = "com.bn.gpb.dailyedition";
+option java_outer_classname = "GpbDailyEdition";
+option optimize_for = LITE_RUNTIME;
+
+
+
+// Daily Edition Feed Request
+message DailyEditionFeedRequestV1 {
+	optional int32 id=1;
+}
+
+//Daily Edition Feed Response
+message DailyEditionFeedResponseV1 {
+	repeated DailyEditionFeedV1 feeds = 1;
+
+}
+
+message DailyEditionFeedV1 {
+	required string name = 1;
+	required string feedUrl = 2;
+}

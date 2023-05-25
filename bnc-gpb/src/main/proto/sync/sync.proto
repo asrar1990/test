@@ -1,0 +1,238 @@
+package sync;
+option java_package = "com.bn.gpb.sync";
+option java_outer_classname = "SyncGPB";
+option optimize_for = LITE_RUNTIME;
+import "product/ProductInfo.proto";
+
+
+
+//Sync Categories
+//When adding, consider notification changes for the new category in NotificationSerializer, Notification, SyncObjectSerializer
+ enum SyncCategoryType { BOOKMARK=0;ANNOTATION=1;READPOSITION=2;LIBRARY=3;LIBRARYSTATE=4;DISPLAYTABLES=5;ABC=6;USERPROFILES=7;RECOMMENDFROMFRIEND=8;LIBRARYOBJECT=9;LENDREQUEST=10;LIST=11;SOCIALFEED=12;DEVICECONTENT=13;ENTITLEMENT=14;VIDEOLIBRARY=15;VIDEOENTITLEMENT=16;}
+ 				 	
+ enum SyncAction { ADD=0;UPDATE=1;DELETE=2;CONFLICT=3;REPLACE=4;};
+ 
+ enum SyncStatus { SUCCESS_STATUS=0;ERROR_STATUS=1;CONFLICT_STATUS=2;DELETE_STATUS=3;};
+ 
+ enum DisplaytStatus { ACTIVE=1;DELETED=2;ARCHIVED=3;};
+ enum PurchasetStatus { STATUS_ACTIVE=1;STATUS_DISABLED=2;STATUS_DECLINED=3;};
+ 
+ enum LendStatus {NONE=0;PENDINGBORROW=10;BORROWED=20;PENDINGLEND=30;LENT=40;RETURNED=50;EXPIRED=60;
+ 				 LENDERHOLD=70;PENDINGVIEWED=80;NULLIFIED=90;PENDING=100;ACTIVETEXTBOOK=110;EXPIRINGSOON=120;EXPIREDGRACEPERIOD=130;REPLACED=140;}
+
+ enum LendPartyType {LENDER=0;LENDEE=1;};
+ 
+ enum SyncType { INITIAL=0;USER_INITIATED=1;READER_INITIATED=2;APP_INITIATED=3;SCHEDULED=4;MISSED=5;SERVER_INITIATED=6;};
+ 	
+
+message SyncItem {
+	optional string luid=1;
+	optional string guid=2;
+	optional int64 modTime=3;
+	optional bytes data=4;
+	required SyncCategoryType categoryType=5;
+	required SyncAction action=6;
+    optional int64 profileId=7;
+}
+
+message SyncAck {
+    optional string luid =1;
+    optional string guid =2;
+    optional int64 modTime=3;
+    required SyncStatus status=4;
+    optional SyncError error=5;
+    optional SyncCategoryType categoryType=6;
+    optional SyncAction action=7;
+}
+
+message SyncCategory {
+	required SyncCategoryType categoryType=1;
+	required int64 lastAnchor=2;
+	optional SyncError error=3;
+	optional bool  integrityCheck=4;
+	optional bytes luidHash=5;
+	optional bool continuationRequired=6;
+	optional bool initialSync=7;
+	optional int64 startAnchor=8;
+	repeated int32 options=9;
+}
+
+message EntitlementV1 {
+    required string ean =1;
+    required int64 deliveryId=2;
+    repeated ProfileEntitlementV1 profileEntitlement=3;
+}
+
+message ProfileEntitlementV1 {
+    required int64 profileId = 1;
+    required bool isActive = 2;
+    optional SyncStatus ack = 3;
+}
+
+message CurrentReadPositionV1 {
+  required string guid=1;
+  optional string ean=2;
+  optional int32 pageCount=3;
+  optional int32 version=4;
+}
+
+message CurrentReadPositionResponseV1 {
+  required  SyncItem readPosition=1;
+}
+
+message SyncRequestV1 {
+  repeated SyncCategory category=1;
+  repeated SyncItem items=2;
+  optional bool initialSync=3;
+  optional SyncType type=4;
+  optional int32 chunkSize=5;
+  repeated SyncAck errorAcks=6;
+  optional int64 syncid=7;
+}
+
+message SyncResponseV1 {
+  repeated SyncCategory category=1;
+  repeated SyncAck acks=2;
+  repeated SyncItem items =3;
+  optional bool continuationRequired=4;
+  optional bool initialSync=5;
+  optional int64 syncid=6;
+}
+
+message ReadPositionV1 {
+   required int64  id=1;
+   required string ean=2;
+   optional string offsetRmsdk=3;
+   required int64  lastUpdated=4;
+   optional string chapter=5;
+   optional string pageNum =6;
+   optional string offset=7;
+   optional bool   isSideLoaded=8;
+   optional string chapterNum=9;
+   optional bool read=10;
+   optional int32 fileVersion=11;
+   optional string deviceName=12;
+}
+
+
+
+message BookMarkV1{
+    optional int64 id =1;
+    required string ean=2;
+    required int64  created=3;
+    optional int64  modified=4;
+    optional string startAbs=5;
+    optional string startAbsRmsdk=6;
+    optional string style=7;
+    optional string color=8;
+	optional string snippet=9;
+	optional string pageNumber=10;
+	optional bool   isSideLoaded=11;
+	optional string chapter=12;
+	optional string chapterNum=13;
+    optional int32 fileVersion=14;
+    optional string deviceName=15;
+}
+  
+ message AnnotationPostitionV1 {
+    optional string startAbsOffset =1;
+    optional string length=2;
+    optional string endAbsOffset=3;
+ }
+  
+
+message AnnotationV1{
+    optional int64 id =1;
+    required string ean=2;
+    required int64  created=3;
+    optional int64  modified=4;
+    optional string style=5;
+    optional string color=6;
+    optional string tags=7;
+    optional AnnotationPostitionV1 rmsdkPostion=8;
+    optional string note=9;
+    optional bool noteAvailable=10;
+    optional string  highlightedText=11;
+    optional bool    highlightedTextAvailable=12;
+    optional string  pageNumber=13;
+    optional string  author=14;
+    optional string  url=15;
+    optional LinkV1  link=16;
+    optional bool    isSideLoaded=17;
+    optional string  chapter=18;
+    optional string chapterNum=19;
+    optional int32 fileVersion=20;
+    optional string deviceName=21;
+}
+
+message LinkV1{
+  optional string name=1;
+  optional string url=2;
+  optional string imageURL=3;
+  optional string title=4;
+  optional string description=5;
+}
+
+
+
+message SyncError {
+   required string errorCode=1;
+   required string errorDesc=2;
+ }
+
+
+message LibraryItemStateV1 {
+   required string ean =1;
+   required int64 deliveryId=2;
+   optional bool lendable=3;
+   optional DisplaytStatus status=4;
+   optional LendStatus lendStatus=5;
+   optional LendPartyInfo info=6;
+   optional bool isComingSoon=7;
+   optional bool isDownloadable=8;
+   optional int64 trialExpirationDate=9;
+   optional PurchasetStatus purchaseStatus=10;
+}
+
+message LibraryItemV1 {
+   required productinfo.LibraryProductV1 item =1;
+   required int64	 dateAdded=2;
+   required PurchasetStatus purchaseStatus=3;
+   required LibraryItemStateV1 itemState=4;
+   optional bool isSubscription=5;
+   optional string subscriptionId=6;
+   optional string subscriptionEAN=7;
+   optional int64 deliveryId=8;
+   optional bool isSampleEan =9;
+   optional string productEan =10;
+}
+
+//message LibraryItem {
+//   required int64 deliveryId = 5;
+//   required productinfo.ProductV1 item =1;
+//   required string shortSynopsis=2;
+//   required string dateAdded=3;
+//   required  int32 purchaseStatus=4;
+//}
+
+message LendPartyInfo {
+  required string lendId =1;
+  optional string user=2;
+  optional string message=3;
+  required int64 started=4;
+  required int64 expires=5;
+  optional LendPartyType type=6;
+}   
+
+message SideLoadedItemRequestV1 {
+	repeated SideLoadedItem readPosition=1;
+}
+
+message SideLoadedItemResponseV1 {
+	repeated SideLoadedItem readPosition=1;
+}
+
+message SideLoadedItem {
+	required string ean=1;
+	required SyncItem items=2;
+}

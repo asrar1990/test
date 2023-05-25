@@ -1,0 +1,92 @@
+package account;
+option java_package = "com.bn.gpb.account.nookstudy";
+option java_outer_classname = "GpbNookStudy";
+option optimize_for = LITE_RUNTIME;
+
+//GetSchools Request 
+message GetSchoolsRequestV1 {
+}
+ 
+message GetSchoolsResponseV1 {
+	repeated SchoolTypeV1 schools=1;
+}
+
+//SetSchool Request 
+message SetSchoolRequestV1 {
+	required int32 schoolID=1;
+}
+
+message SetSchoolResponseV1 {
+	optional int32 status=1;
+}
+
+//GetNookStudy Account Request
+message GetNookStudyAccountRequestV1 {
+}
+
+message GetNookStudyAccountResponseV1 {
+	optional SchoolTypeV1 school=1;
+	optional AdobeAccountTypeV1 adobeAccount=2;
+}
+
+//RegisterAdobeDevice Request 
+message RegisterAdobeDeviceRequestV1 {
+	required string deviceID=1;
+}
+ 
+message RegisterAdobeDeviceResponseV1 {
+   optional int32 status=1;
+}
+
+//Verify NookStudyAccount
+message VerifyNookStudyAccountRequestV1 {
+	required string adobeid=1;
+}
+
+message VerifyNookStudyAccountResponseV1 {
+	optional int32 status=1;
+}
+
+//Set NookStudyAccount
+message SetNookStudyAccountRequestV1 {
+	required string	adobeID=1;
+}
+
+message SetNookStudyAccountResponseV1 {
+	optional int32 linkID=1;
+}
+
+//Create NookStudy account
+message CreateNookStudyAccountRequestV1 {
+	optional string adobeID=1;			//email address
+	required string password=2;
+	optional string firstName=3;
+	optional string lastName=4;
+	optional string country=5;
+}
+
+message CreateNookStudyAccountResponseV1 {
+	optional AdobeAccountTypeV1 adobeAccount=1;
+}
+
+//redeem access code
+message RedeemAccessCodeRequestV1 {
+	required string accesscode=1;
+}
+
+message RedeemAccessCodeResponseV1 {
+	optional string ean=1;
+	optional bool	isRedeem=2;
+}
+
+message SchoolTypeV1 {
+    required int32 id=1;
+    required string name=2;
+    required string state=3;
+    required string country=4; 
+}
+
+message AdobeAccountTypeV1 {
+	optional int32 	linkID=1;
+	optional string adobeID=2;
+}

@@ -1,0 +1,103 @@
+package p13n;
+option java_package = "com.bn.gpb.location";
+option java_outer_classname = "Location";
+option optimize_for = LITE_RUNTIME;
+
+import "product/ProductInfo.proto";
+
+//***
+message StoreLocationsRequestV1 {
+	optional string city=1;
+	optional string state=2;
+	optional string zip=3;
+	optional float latitude=4;
+	optional float longitude=5;
+	optional int32 radius=6;
+	optional int32 offset=7;
+	optional int32 limit=8;
+}
+
+message StoreLocationsResponseV1 {
+	optional int32 radius=1;
+	optional StoreLocationListV1 locations=2;
+	optional int32 totalItems=3;
+	optional int32 offset=4;
+	optional int32 limit=5;
+}
+
+message StoreLocationListV1 {
+	repeated StoreLocationV1 locations=1;
+}
+
+message StoreLocationV1 {
+	optional int32 storeId=1;
+	optional bool cafe=2;
+	optional bool libros=3;
+	optional bool music=4;
+	optional bool usedbooks=5;
+	optional bool wifi=6;
+	optional bool kiosk=7;
+	optional string storeImageUrl=8;
+	optional float distance=9;
+	optional float latitude=10;
+	optional float longitude=11;
+	optional string nickname=12;
+	optional string corporateName=13;
+	optional string address=14;
+	optional string phone=15;
+	optional string directions=16;
+	optional string hours=17;
+	optional string status=18;
+}
+
+message StoreLocationBasicV1 {
+	required int32 storeId=1;
+	required string storeImageUrl=2;
+	required float distance=3;
+	optional string nickname=4;
+	required string address=5;
+	required string phone=6;
+}
+
+//*** ?
+message StoreLocationRequestV1 {
+	required int32 storeId=1;
+}
+
+//***
+message StoreEventsRequestV1 {
+	optional string city=1;
+	optional string state=2;
+	optional string zip=3;
+	required int32 offset=4;
+	required int32 limit=5;
+}
+
+message StoreEventsByStoreIdV1 {
+	required string storeId=1;
+}
+
+message StoreEventsResponseV1 {
+	required int32 offset=1;
+    required int32 limit=2;
+    required int32 total=3;
+	optional StoreEventListV1 events=4;
+}
+
+message StoreEventListV1 {
+	repeated StoreEventV1 events=1;
+}
+
+message StoreEventV1 {
+	required string eventId=1;
+	required string type=2;
+	required string genre=3;
+	required StoreLocationBasicV1 store=4;
+	required string name=5;
+	optional string detail=6;
+	required string formattedDate=7;
+	required string time=8;
+	optional productinfo.ProductListV1 products=9;
+	required string iconUrl=10;
+	optional productinfo.ImageListV1 images=11;
+}

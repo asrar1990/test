@@ -1,0 +1,172 @@
+package device;
+option java_package = "com.bn.gpb.device";
+option java_outer_classname = "GpbDevice";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+
+//DeviceAuth Request 
+message DeviceAuthRequestV1 {
+	required commons.DeviceV1 device=1;		//need all device information
+	required string deviceRand=2;			//random value
+	required string deviceHash=3;			//MD5 hash(serial#, model, random #)
+}
+
+//DeviceAuth Response 
+message DeviceAuthResponseV1 {
+	optional int64   deviceId=1;
+    optional commons.AuthTokenV1 deviceToken=2;
+	optional commons.AccountV1 account=3;			//return account detail
+    optional commons.AuthTokenV1 accountToken=4;
+    optional bool adsSupported=5;
+    repeated commons.ExtraInfoV1 extraInfo=6;
+}
+
+//set time zone
+message NotifyTzRequestV1 {
+	required string timeZone=1;
+}
+
+message NotifyTzResponseV1 {
+	optional int32 status=1;
+}
+
+//EndpointPassPhrase Request 
+message EndpointGetPassPhraseRequestV1 {
+	required string uniqueid=1;
+	required string modelid=2;
+}
+
+//EndpointPassPhrase Response 
+message EndpointGetPassPhraseResponseV1 {
+	optional string passphrase=1;
+}
+
+//Request to notify cloud that a device is locked
+message DeviceLockedRequest{
+	required string pin=1;
+}
+message DeviceLockedResponse{
+}
+
+
+//GetDeviceProvisioning
+message DeviceProvisioningV1{
+ //provisioningid: the auto-generated id that helps cloud to uniquely identify a provisioning command...
+ //currently device does not need to use it but keeping it in case this may be needed in future
+ //to process a specific provisioning command on the cloud
+ //commandid: the pre-determined Action (as mentioned in http://pawiki.barnesandnoble.com/confluence/display/platform/Device+Provisioning)
+ //data: any data associated with the action. e.g. the new device pin for a lock action (need to understand if this should be encrypted before sending in the response)
+	required int64 provisioningId=1;
+	required int32 commandId=2;
+    required CommandType type=3;
+    required string description=4;
+	optional string data=5;
+}
+
+
+message DeviceProvisioningRequestV1{
+
+}
+
+message DeviceProvisioningResponseV1{
+    required bool atomic=1;
+	repeated DeviceProvisioningV1 deviceProvisioning=2;
+}
+
+message DeviceProvisioningStatusRequestV1{
+    required int32 rid=1;
+    required int32 commandId=2;
+    required string status=3;
+    required string data=4;
+}
+
+
+enum CommandType {
+    GET = 1;
+    ADD = 2;
+    UPDATE = 3;
+    DELETE = 4;
+    EXECUTE = 5;
+}
+
+message GroupDeviceProvisioningStatusRequestV1{
+    repeated DeviceProvisioningStatusRequestV1 status=1;
+}
+
+message RetailerDetailsRequestV1 {
+    optional string retailerID=1;
+}
+
+message RetailerDetailsResponseV1 {
+    repeated commons.RetailerInfoV1 retailer=1;
+}
+
+message HdcpLicenseRequestV1{
+    // encrypted data
+    required string encryptedData=1;
+}
+
+message HdcpLicenseResponseV1{
+    // encrypted data
+    required string encryptedData=1;
+}
+
+//authorizing or de-Authorizing a device.  For authorizing, return authorizing token
+message DeviceAuthDeAuthRequestV1{
+    required string identifier=1;
+    required bool   authorize=2;
+}
+
+message DeviceAuthDeAuthResponseV1{
+    optional string authorizeToken=1;
+    repeated AuthorizedDeviceV1 activeDevices=2;
+}
+
+message AuthorizedDeviceV1 {
+    optional string id=1;
+    optional string name=2;
+    optional string platform=3;
+    optional string operatingSystem=4;
+}
+
+//retrieve configuration values
+message GetConfigRequestV1 {
+    repeated ServiceConfigInfoV1 config=1;
+}
+
+message GetConfigResponseV1 {
+    repeated commons.ExtraInfoV1 config=1;
+}
+
+message ServiceConfigInfoV1 {
+    optional string service=1;
+    optional string key=2;
+}
+
+message DeviceLocationRequestV1 {
+    required commons.DeviceV1 device=1; // need device information to get IP Address
+}
+
+message DeviceLocationResponseV1 {
+        optional string ipAddress=1;
+        optional string city=2;
+        optional string country=3;
+        optional string accuracyRadius=4;
+        optional string latitude=5;
+        optional string longitude=6;
+        optional string timeZone=7;
+        optional string postalCode=8;
+        optional string officialSunriseTime=9;
+        optional string officialSunsetTime=10;
+        optional string astronomicalSunriseTime=11;
+        optional string astronomicalSunsetTime=12;
+}
+
+message SessionKeyRequestV1 {
+}
+
+message SessionKeyResponseV1 {
+    required bytes sessionKey=1;
+    required int64 expiryTime=2;
+}

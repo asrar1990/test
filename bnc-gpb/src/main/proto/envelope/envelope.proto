@@ -1,0 +1,66 @@
+package envelope;
+option java_package = "com.bn.gpb.envelope";
+option java_outer_classname = "Envelope";
+option optimize_for = LITE_RUNTIME;
+import "common/Common.proto";
+import "notification/notification.proto";
+
+message EnvelopeRequestV1 {
+    required string command=1;
+    required int32 version=2;
+    optional bytes payload=3;
+    optional AuthRequestV1 auth=4;
+    optional string deviceVersion=5; 
+    optional int64 messageId=6;
+	optional string provider=7;
+	optional commons.LocaleV1 userLocale=8;
+	repeated AdditionalInfoV1 additional=9;
+	repeated RequestNotificationV1 requestNotification=10;
+	optional string providerCountry=11;
+}
+
+message RequestNotificationV1 {
+  required int64 time=1;
+  required int32 category=2; //values from GPBAppConstants.RequestNotificationCategory enum
+  repeated bytes data=3; //potentially json-formatted such as: {"action":"getProductDetails","ean":"xxxxxxxxxxxxxxx","listIdHash":"xxxxx-xxxxx-xxxxx--xxxxxx","position":25,"offset":"3", "page":"4","context":"SHOP","feedback":"like it"}
+}
+
+//deprecated.. Use GPBAppConstants.RequestNotificationCategory enum values
+enum RequestNotificationCategory { LIST_INTERACTION=0; }
+
+message EnvelopeResponseV1 {
+    optional bytes payload=1;
+    optional notification.notificationListV1 notifications=2;
+    optional commons.Error error=3;  
+    optional commons.Error frameworkError=4;
+    optional int64 messageId=5;
+}
+
+message AuthRequestV1 {
+	required DeviceCheckV1 deviceCheck=1;
+	optional AccountCheckV1 accountCheck=2;
+	repeated AppTokenV1 appToken=3;
+}
+
+message AccountCheckV1 {
+	required int64  accountId=1;
+	required string token=2;
+	optional int64  profileId=3;
+}
+
+message DeviceCheckV1 {
+	required string deviceId=1;
+	required string token=2;
+}
+
+message AppTokenV1 {
+	required string appName=1;
+	required string token=2;
+	optional string tokenExpireTime=3;
+}
+
+message AdditionalInfoV1 {
+	required string key=1;
+	required string value=2;
+	optional string type=3;
+}

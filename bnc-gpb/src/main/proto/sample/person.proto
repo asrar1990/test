@@ -1,0 +1,16 @@
+package person;
+option java_package = "com.sample.gpb.person";
+option java_outer_classname = "GpbPerson";
+option optimize_for = LITE_RUNTIME;
+
+message PersonRequestV1 {
+  optional string name = 1;
+  optional int32 age = 2;
+  optional string email = 3;
+}
+
+message PersonResponseV1{
+    optional string email = 1;
+	optional bool isError=2;
+	optional string message=3;
+}

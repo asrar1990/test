@@ -1,0 +1,174 @@
+package sync;
+option java_package = "com.bn.gpb.sync.v2";
+option java_outer_classname = "SyncGPB";
+option optimize_for = LITE_RUNTIME;
+
+import "sync/sync.proto";
+import "product/ProductInfoV2.proto";
+import "common/Common.proto";
+
+//Sync Purchase status
+enum PurchaseStatus {ACTIVE_STATUS=1;DISABLED_STATUS=2;DECLINED_STATUS=3;};
+enum LendRequestStatusV1 {LR_REQUESTED=1;LR_ACCEPTED=2;LR_DECLINED=3;LR_EXPIRED=4;LR_NOT_AVAILABLE=5;LR_FAILED=6;}
+
+message LibraryV2{
+   required LibraryItemStateV2 state =1;
+   optional LibraryItemV2 library =2;
+   optional int64 defaultProfileId = 3;
+ }
+ 
+ message LibraryItemStateV2 {
+   required string ean =1;
+   required int64 deliveryId=2;
+   optional bool lendable=3;
+   optional DisplaytStatus status=4;
+   optional LendStatus lendStatus=5;
+   optional LendPartyInfo info=6;
+   optional bool isComingSoon=7;
+   optional bool isDownloadable=8;
+   optional int64 trialExpirationDate=9;
+   optional PurchaseStatus purchaseStatus=10;
+   optional int32  versionCode=11;
+   optional int32  downloadRestrictionCause=12;
+   optional DRMInfoV1 drmInfo=13;
+   optional RentalStateInfoV1 rentalInfo=14;
+   optional int64 lastReadPositionModTime=15;
+}
+
+message LibraryItemV2 {
+   required productinfo.LibraryProductV2 item =1;
+   required int64	 dateAdded=2;
+   required PurchasetStatus purchaseStatus=3;
+   optional bool isSubscription=4;
+   optional string subscriptionId=5;
+   optional string subscriptionEAN=6;
+   optional int64 deliveryId=7;
+   optional bool isSampleEan =8;
+   optional string productEan =9;
+   optional VideoLibraryV1 videoLibrary=10;
+   optional string purchasedEan=11;
+   optional string audioLicenseKey=12;
+}
+
+message DRMInfoV1{
+   repeated string basicDeviceID=1;
+   repeated string enhancedDeviceID=2;
+   optional bool isBasicAvailable=3;
+   optional bool isEnhancedAvailable=4;
+}
+
+message RentalStateInfoV1 {
+  required string textBookCode=1;
+  required int64  accessCode=2;
+  optional bool   isFreeTrial=3;
+  optional int32  accessDays=4;
+  optional int64  rentalStartDate=5;
+  optional int64  rentalExpirationDate=6;
+  optional int64  rentalOfferExpireDate=7;
+  optional bool   availableToPurchase=8;
+  optional bool   availableToRent=9;
+  optional bool   availableToExtendRent=10;
+  optional bool   availableToUpgrade=11;
+}
+
+message LendRequestV1 {
+	required LendPartyType type=1;
+	required int64  contactId=2;
+	required string contactEmail=3;
+	required string firstName=4;
+	required string lastName=5;
+	optional string message = 6;
+	required int64 lendRequestId =7;
+	required int64 createdDate = 8;
+	required int64 deliveryId = 9;
+	required LendRequestStatusV1 status =10;
+	optional productinfo.LibraryProductV2 item =11;
+	optional string profileUrl = 12;
+	optional int64 profileHash = 13;
+	optional bool productTypeSupported = 14;
+}
+
+message SetCurrentReadPositionV1 {
+  required  SyncItem readPosition=1;
+}
+
+message SetCurrentReadPositionResponseV1 {
+  required  SyncAck ack=1;
+}
+
+message DeviceContentItemV1{
+   required int32 productCode=1;
+   required productinfo.LibraryProductV2 item =2;
+   required string downloadUrl=3;
+}
+
+message DeviceContentV1{
+   optional DeviceContentItemV1 item =1;
+   required DeviceContentStateItemV1 state=2;
+}
+
+message DeviceContentStateItemV1 {
+   required string ean=1;
+   required int32  versionCode=2;
+   optional string country=4;
+   optional string language=5;
+   optional string itemType=6;
+   optional int64  size=7;
+   optional int64  expandSize=8;
+}
+
+message DeviceContentStateItemV2 {
+   required string ean=1;
+   required int32  versionCode=2;
+   optional string country=4;
+   optional string language=5;
+   optional string itemType=6;
+   optional int64  size=7;
+   optional int64  expandSize=8;
+   optional string downloadUrl=9;
+}
+
+message GetProductsForDeviceRequestV1 {
+
+}
+
+message GetProductsForDeviceResponseV1{
+      repeated productinfo.ProductV2 item=1;
+}
+
+message GetEssentialsRequestV1 {
+  repeated string type=1;
+}
+
+message GetEssentialsResponseV1 {
+  repeated DeviceContentStateItemV2 content=1;
+}
+
+//AddItemsToLocker
+message AddItemsToLockerRequestV1 {
+    required int64  profileid=1;
+    repeated string ean=2;
+}
+
+message AddItemsToLockerResponseV1 {
+    repeated AddedItemV1 item=1;
+}
+
+message AddedItemV1 {
+	optional string ean=1;
+	optional bytes licenseFile=2;
+	repeated commons.DownloadURLV1 downloadUrls=3;
+    repeated sync.SyncItem items=4;
+    optional string mediaType=5;
+    optional int32 licenseType=6;
+}
+
+message VideoLibraryV1 {
+    optional string rightID=1;
+    optional string resolutionType=2;
+    optional string rightType=3;
+    optional int64  rentalStartDate=4;
+    optional int64  rentalExpirationDate=5;
+    optional int64  rentalOfferExpireDate=6;
+    optional int32  rentalDays=7;
+}

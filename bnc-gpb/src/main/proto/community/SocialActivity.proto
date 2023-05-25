@@ -1,0 +1,150 @@
+package community;
+option java_package = "com.bn.gpb.community";
+option java_outer_classname = "SocialActivity";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "product/ProductInfoV2.proto";
+import "community/CommunityRateReview.proto";
+import "community/CommunityRecommend.proto";
+
+
+
+message SocialFeedV1{
+	required FeedTypeV1 type = 1;
+	required productinfo.ProductV2 product = 2;
+	required string feedMessage = 4;
+	optional string feedContent = 5;
+	optional string feedContentCont = 6;
+	optional RatingValueV1 rating =7;
+	required FriendInfoV1 friend = 8;
+	required int64 timestamp = 9;
+	optional bool productTypeSupported = 10;
+}
+
+message FriendInfoV1{
+	required string firstName=1;
+	required string lastName  =2;
+	required string emailAddress =3;
+	optional string pictureUrl = 4;
+	required int64 accountId = 5;
+	optional int64 pictureHash = 6;
+
+}
+
+enum FeedTypeV1{
+	RECOMMENDPUBLIC = 1;
+	SHAREQUOTEPUBLIC = 2;
+	SHAREREADINGSTATUS = 3;
+	FACEBOOKLIKE = 4;
+	RATE = 5;
+	REVIEW = 6;
+	SHAREQUOTETOYOU = 7;
+	RECOMMENDTOYOU = 8;
+	FACEBOOK_LIKE_EXTERNAL = 9;
+}
+message SocialRecommendationsRequestV1{
+    optional string hash=1;
+    optional int32 limit =2;
+    
+}
+
+message SocialRecommendationsResponseV1{
+    required bool socialInfoAvailable =1;
+    repeated SocialRecommendationV1 recommendations=2;     
+    required string hash=3;
+    required int64 expiryTime=4;
+    
+}
+message SocialRecommendationV1{
+	required productinfo.ProductV2 product = 1;
+	repeated FriendSocialRecommendationInfoV1 friends = 2;
+	optional int64 recommendPublicCount = 3;
+	optional int64 facebookLikeCount = 4;
+}
+message FriendSocialRecommendationInfoV1{
+	required int64 accountId = 1;
+	required int64 timestamp = 2;
+	required string firstName=3;
+	required string lastName  =4;
+	required string emailAddress =5;	
+	optional string pictureUrl = 6;
+	required SocialRecommendationTypeV1 type =7;
+	optional int64 pictureHash = 8;
+} 
+enum SocialRecommendationTypeV1{
+	RECOMMEND = 1;
+	LIKE = 2;
+	RECOMMEND_TOYOU = 3;
+}
+
+message SocialUserActivityRequestV1{
+
+}
+
+message SocialUserActivityResponseV1{
+	required int32 recommendFriend = 1;
+	required int32 recommendPublic = 2;
+	required int32 shareQuoteFriend = 3;
+	required int32 shareQuotePublic = 4;
+	required int32 shareReadingStatus = 5;
+	required int32 facebookLendOffer = 6;
+	required int32 facebookLike = 7;
+	required int32 lendingRequests = 8;
+	required int32 review = 9;
+	required int32 rate = 10;
+	required int32 vote = 11;
+	optional string profileUrl =12;
+	optional int64 profileHash = 13;
+}
+
+message SocialFeedRequestV2{
+	required SocialFeedRequestTypeV2 requestType = 1;
+	required int32 offset = 2;
+	required int32 limit = 3;
+	optional int64 accountId = 4;
+	optional string ean = 5;
+}
+
+enum SocialFeedRequestTypeV2{
+	ALL = 1;
+	BY_FRIEND = 2;
+	BY_EAN = 3;
+}
+
+message SocialFeedResponseV2{
+	repeated SocialFeedInfoV2 feeds=1;
+	required bool isMoreDataAvailable = 2;
+	optional string hash=3;
+    optional int64 expiryTime=4;
+}
+
+message SocialFeedInfoV2{
+	required FeedTypeV1 type = 1;
+	required productinfo.ProductV2 product = 2;
+	optional string text1 = 3; //User generated content, eg..g recommendation text, review title
+	optional string text2 = 4; //2nd UGC, eg.g. the quote or the review text
+	optional RatingValueV1 rating = 5;
+	optional int32 percentage = 6;
+	optional int32 page = 7;
+	required int64 timestamp = 8;
+	optional bool productTypeSupported = 9;
+	required CommunityContactV1 accountInfo = 10;
+	optional CommunityContactV1 contactInfo  =11;
+}
+
+message SocialFeedV2{
+	required FeedTypeV1 type = 1;
+	required productinfo.ProductV2 product = 2;
+	optional string text1 = 3; //User generated content, eg..g recommendation text, review title
+	optional string text2 = 4; //2nd UGC, eg.g. the quote or the review text
+	optional RatingValueV1 rating = 5;
+	optional int32 percentage = 6;
+	optional int32 page = 7;
+    optional int64 accountId = 8;
+    optional int64 contactAccountId = 9;
+    optional string contactEmail = 10;
+    optional string facebookUid = 11;
+	required int64 timestamp = 12;
+	optional bool productTypeSupported = 13;
+}

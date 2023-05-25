@@ -1,0 +1,431 @@
+package account;
+option java_package = "com.bn.gpb.account";
+option java_outer_classname = "GpbPurchase";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "sync/sync.proto";
+import "product/ProductInfo.proto";
+import "license/License.proto";   // unused - obsolete
+import "license/Reader.proto";
+
+//Purchase Request
+message PurchaseRequestV1 {
+	required string ean=1;
+	optional string receiptID=2;
+	optional productinfo.ProductTypeV1 itemType=3;
+	repeated reader.ReaderInfoV1 readerInfo=4;
+	repeated int64 entitledProfile=5;
+	optional int32 rentalDays=6;
+	optional int32 productTypeValue=7;
+	optional string microsoftToken=8;
+	optional string sourceId=9;
+	optional string purchaseType=10;    //needed to distinguish different clients on the same device
+	optional bool sendCOPPAEmail=11;
+    optional float onlinePrice=12;
+}
+
+message PurchaseResponseV1 {
+	optional string ean=1;
+	optional bytes licenseFile=2;
+	repeated commons.DownloadURLV1 downloadUrls=3; 
+    repeated sync.SyncItem items=4;
+    optional string environment=5;
+    optional string mediaType=6;
+    optional string ebookKey=7;
+    optional string analytics=8;
+    optional license.SignedLicenseV1 signedLicense=9;     // unused - obsolete
+    optional int32 licenseType=10;
+    optional string md5AkamaiFile=11;
+    optional string md5DRMKey=12;
+    optional string md5LicenseFile=13;
+    optional int32 availableCredits=14;
+}
+
+//InStoreUrlsAndLicense Request
+message InStoreUrlsAndLicenseRequestV1 {
+	required string ean=1;
+	optional string mediaType=2;
+	optional productinfo.ProductTypeV1 itemType=3;
+	repeated reader.ReaderInfoV1 readerInfo=4;
+	optional int32 productTypeValue=5;
+}
+
+message InStoreUrlsAndLicenseResponseV1 {
+	optional string ean=1;
+	optional bytes licenseFile=2;
+	repeated commons.DownloadURLV1 downloadUrls=3;
+    optional string environment=4;
+    optional string mediaType=5;
+    optional license.SignedLicenseV1 signedLicense=6; // unused - obsolete
+    optional int32 licenseType=7;
+}
+
+message InStoreTokenRequestV1 {
+	optional string signature=1;
+}
+
+message InStoreTokenResponseV1 {
+	optional commons.AuthTokenV1 inStoreToken=1;
+}
+
+//CCHash Request 
+message CCHashRequestV1 {
+}
+
+//CCHash Response 
+message CCHashResponseV1 {
+    optional bytes ccHash=1;
+    optional bytes pdbCcHash=2;
+    optional string operatorURL=3;
+}
+
+//Add credit card
+message AddCreditCardRequestV1 {
+    required PaymentTypeV1 paymentType=1;
+    optional AddressV1 address=2;
+}
+
+message AddCreditCardResponseV1 {
+	optional int32 status=1;
+}
+
+//Update credit card
+message UpdateCreditCardRequestV1 {
+    required PaymentTypeV1 paymentType=1;
+    optional AddressV1 address=2;
+}
+
+message UpdateCreditCardResponseV1 {
+	optional int32 status=1;
+}
+
+message PaymentTypeV1 {
+    optional string firstName=1;
+    optional string lastName=2;
+    optional string company=3;
+    required string cardNumber=4;
+    optional string cvs=5;
+    required int32  expiredMonth=6;
+    required int32  expiredYear=7;
+    required string type=8;
+    optional int32  default=9;
+    optional string paymentId=10;
+    optional int64 addressId=11;
+}
+
+message DirectDebitPaymentV1 {
+    optional string firstName=1;
+    optional string lastName=2;
+    required string routingNumber=3;
+    required string displayNumber=4;
+    required string countryCode=5;
+    optional int32  default=9;
+    optional string paymentId=10;
+    optional int64 addressId=11;
+}
+
+message PayPalPaymentV1 {
+    optional string firstName=1;
+    optional string lastName=2;
+    required string payPalToken=4;
+    optional int32  default=9;
+    optional string paymentId=10;
+    optional int64 addressId=11;
+}
+
+message AddressV1 {
+    required string address1=1;
+    optional string address2=2;
+    optional string address3=3;
+    required string city=4;
+    optional string state=5;
+    optional string zipCode=6;
+    required string countryCode=7;
+    optional string phone=8;
+    optional int64 addressId=9;
+    optional string firstName=10;
+    optional string lastName=11;
+    optional string nickName=12;
+    optional string checkSum=13;
+}
+
+//get customer payment information
+message PaymentMethodsRequestV1 {
+    optional bool showAll=1;
+}
+
+message PaymentMethodsResponseV1 {
+    repeated PaymentTypeV1 paymentType=1;
+    repeated AddressV1 address=2;
+    repeated DirectDebitPaymentV1 directDebitPayment=3;
+    repeated PayPalPaymentV1 payPalPayment=4;
+}
+
+//getUrlsAndLicense
+message UrlsAndLicenseRequestV1 {
+    required int64 deliveryId=1;
+    optional int32 versionCode=2;
+    optional DownloadType type=3;
+    optional string adobeDeviceId=4;
+    optional int32 drmType=5;
+    optional productinfo.ProductTypeV1 itemType=6;
+    repeated reader.ReaderInfoV1 readerInfo=7;
+    optional int32 productTypeValue=8;
+}
+
+message UrlsAndLicenseResponseV1 {
+    optional int64 deliveryId=1;
+    optional bytes licenseFile=2;
+    repeated commons.DownloadURLV1 downloadUrls=3;
+    optional string environment=4;
+    optional string mediaType=5;
+    optional string ean=6;
+    optional string ebookKey=7;
+    optional string analytics=8;
+    optional license.SignedLicenseV1 signedLicense=9; // unused - obsolete
+    optional int32 licenseType=10;
+    optional string md5AkamaiFile=11;
+    optional string md5DRMKey=12;
+    optional string md5LicenseFile=13;
+    optional int32 fileVersion=14;
+}
+
+//Notify Download failure
+message NotifyDownloadFailureRequestV1 {
+    required string ean=1;
+    required string downloadUrl=2;
+}
+
+message NotifyDownloadFailureResponseV1 {
+    optional bool successful=1;
+}
+
+//Purchase Check
+message PurchaseCheckRequestV1 {
+    required int64 deliveryId=1;
+}
+
+message PurchaseCheckResponseV1 {
+    optional bool hasPurchased=1;
+}
+
+//textbook rentals
+message TextBookRentalRequestV1 {
+    required string ean=1;
+    required int32  rentalDays=2;
+    optional string userAgent=3;
+}
+
+message TextBookRentalResponseV1 {
+    optional int64 deliveryId=1;
+    optional string ean=2;
+}
+
+//Add Textbook free trial
+message AddTextBookFreeTrialRequestV1 {
+    required string	ean=1;
+}
+
+message AddTextBookFreeTrialResponseV1 {
+    optional string ean=1;
+    repeated sync.SyncItem items=2;
+}
+
+//CCMasterDataRequest
+message CCMasterDataRequestV1 {
+}
+
+message CCMasterDataResponseV1 {
+    repeated CCTypeV1 ccTypes=1;
+    repeated CountryTypeV1 countries=2;
+    repeated StateTypeV1 states=3;
+}
+
+message CCTypeV1 {
+    required string ccType=1;
+    required string ccName=2;
+}
+
+message CountryTypeV1 {
+   required string countryCode=1;
+   required string countryName=2;
+}
+
+message StateTypeV1 {
+   required string countryCode=1;
+   required string stateCode=2;
+   required string stateName=3;
+}
+
+enum DownloadType { 
+				 USER_INITIATED=11;
+ 				 INIT_SYNC=12;
+ 				 SYNC=13;};
+
+ 				 
+//Add gift card
+message AddGiftCardRequestV1 {
+    required GCPaymentTypeV1 paymentType=1;
+}
+
+message AddGiftCardResponseV1 {
+	required string customerId=1;
+	required GCPaymentResponseV1 gcPaymentResponseV1=2;
+}
+
+message GCPaymentTypeV1 {
+    required string giftCardNumber=1;
+    required string securityPin=2;
+}
+
+//get gift card details
+message GetGiftCardRequestV1 {
+    optional bool showAll=2;
+}
+
+message GetGiftCardResponseV1 {
+	required string customerId=1;
+	repeated GCPaymentResponseV1 gcPaymentResponseV1=2;
+}
+
+message GCPaymentResponseV1 {
+    required string giftCardNumber=1;
+    optional float  amountAvailable=2;
+    required bool  pinIndicator=3;
+    optional string paymentId=4;
+    optional string securityPin=5;
+} 
+
+//get customer addresses
+message GetBillingAddressRequestV1 {
+}
+
+message GetBillingAddressResponseV1 {
+	repeated AddressV1 addressV1=1;
+}
+
+//update customer addresses
+message UpdateBillingAddressRequestV1 {
+	required AddressV1 addressV1=1;
+}
+
+message UpdateBillingAddressResponseV1 {
+	required bool status=1;
+}
+
+message CancelSubscriptionRequestV1 {
+    required string ean=1;
+    required int64 deliveryId=2;
+}
+
+message CancelSubscriptionResponseV1 {
+    optional bool canceled=1;
+}
+
+//AccountLessUrlsAndLicense Request
+message AccountLessUrlsAndLicenseRequestV1 {
+	required string ean=1;
+}
+
+message AccountLessUrlsAndLicenseResponseV1 {
+	optional string ean=1;
+	repeated commons.DownloadURLV1 downloadUrls=2;
+    optional string environment=3;
+    optional string mediaType=4;
+}
+
+message PurchaseCreditSubscriptionRequestV1 {
+    required string ean=1;
+    optional string sourceId=2;
+    optional float onlinePrice=3;
+    optional int32 actionCode=4; //NEW,UPGRADE,DOWNGRADE
+    optional bool isImmediate=5; // IF TRUE , CREDITS WILL BE ADDED IMM. FALSE- NEXT BILLING CYCLE.
+}
+
+message PurchaseCreditSubscriptionResponseV1 {
+    optional string ean=1;
+    optional string itemDescription=2;
+    optional int32 totalAvailableCredit=3;
+    optional int64 subscribeDate=4;
+    optional int64 nextRenewDate=5;
+}
+
+message CancelCreditPurchaseSubscriptionRequestV1 {
+    required string ean=1;
+    optional string reasonCode=2; // client-app to give code and reason
+    optional string reasonText=3;
+}
+
+message CancelCreditPurchaseSubscriptionResponseV1 {
+    optional string status=1;
+    optional int32 totalAvailableCredit=2;
+    optional int64 cancelDate=3;
+    optional int64 creditExpireDate=4;
+}
+
+message CancelCreditsReasonRequestV1 {
+}
+
+message CancelCreditsReasonResponseV1 {
+    repeated CancelCodeReason cancelCodeReason=1;
+}
+
+message CancelCodeReason {
+    required string reasonCode=1;
+    required string reasonText=2;
+}
+
+message AudiobookLicenseRequestV1 {
+    required int64 deliveryId=1;
+    optional int32 versionCode=2;
+    optional DownloadType type=3;
+    optional productinfo.ProductTypeV1 itemType=4;
+    optional int32 productTypeValue=5;
+}
+
+message AudiobookLicenseResponseV1 {
+    optional int64 deliveryId=1;
+    optional bytes licenseKey=2;
+    optional string environment=3;
+    optional string ean=4;
+}
+
+
+message ReportingEventRequestV1 {
+    required int64 deliveryId=1;
+    required int32 eventCode=2;
+    required string detailText=3;
+    optional int64 eventDate=4; // When device is offline or unable to reach cloud, device will capture send event occurred date in the subsequent request.
+}
+
+message ReportingEventResponseV1 {
+    optional bool status=1;
+}
+
+message GetLatestFileVersionRequestV1 {
+    required string ean = 1;
+}
+
+message GetLatestFileVersionResponseV1 {
+    optional string ean = 1;
+    optional int32 fileVersion = 2;
+}
+
+message PurchaseBlockStatusRequestV1 {
+    required string modelId=1;
+    required string clientVersion=2;
+}
+
+message PurchaseBlockStatusResponseV1 {
+    optional bool blockStatus=1;  // true = disabled, false = allowed
+}
+
+message PurchaseAllowTypeRequestV1 {
+    required string modelId=1;
+    required string clientVersion=2;
+}
+
+message PurchaseAllowTypeResponseV1 {
+    optional string allowType=1;  // 0 = disabled, 1 = in-app, 2 = via web
+}

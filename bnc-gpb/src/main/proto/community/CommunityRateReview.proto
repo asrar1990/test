@@ -1,0 +1,63 @@
+package community;
+option java_package = "com.bn.gpb.community";
+option java_outer_classname = "CommunityRateReview";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+
+message WriteReviewRequestV1{
+	required string ean = 1;
+	required RatingValueV1 rating = 2;
+	required string reviewHeadline = 3;
+	required string reviewText = 4;
+}
+
+message WriteReviewRequestV2{
+	required string ean = 1;
+	required RatingValueV1 rating = 2;
+	required string reviewHeadline = 3;
+	required string reviewText = 4;
+	required bool postToFacebook = 5;
+	required bool postToTwitter = 6;
+}
+
+enum RatingValueV1 { 
+ 	ONESTAR = 1; 
+ 	TWOSTAR = 2;
+ 	THREESTAR = 3;
+ 	FOURSTAR = 4;
+ 	FIVESTAR = 5;
+}
+
+message WriteReviewResponseV1{
+	required WriteReviewStatusV1 status = 1; 
+}
+
+enum WriteReviewStatusV1{
+	WRITE_REVIEW_SUCCESS = 1;
+}
+
+message VoteForReviewRequestV1{
+	required string reviewId = 1;
+	required string ean = 2;
+	required bool positiveVote = 3;
+}
+message VoteForReviewResponseV1{
+	required VoteForReviewStatusV1 status = 1;
+}
+
+enum VoteForReviewStatusV1{
+	VOTE_REVIEW_SUCCESS = 1;
+}
+
+message RateBookRequestV1{
+	required string ean = 1;
+	required RatingValueV1 rating = 2;
+}
+message RateBookResponseV1{
+	required RateBookStatusV1 status = 1;
+}
+
+enum RateBookStatusV1{
+	RATE_BOOK_SUCCESS = 1;
+}

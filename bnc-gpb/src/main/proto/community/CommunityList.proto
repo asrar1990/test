@@ -1,0 +1,164 @@
+package community;
+option java_package = "com.bn.gpb.community";
+option java_outer_classname = "CommunityList";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "product/ProductInfoV2.proto";
+
+message CreateListRequestV1{
+	required string listName=1;
+	required string categoryName=2;
+	optional string description=3;
+}
+message CreateListResponseV1{
+	required CreateListStatusV1 status = 1;
+}
+
+enum CreateListStatusV1{
+	CREATE_LIST_SUCCESS = 1;
+}
+ 
+message GetUserListsRequestV1{
+    
+}
+ 
+ 
+message GetUserListsResponseV1{
+    required int32 totalCount=1;
+    repeated UserListV1 lists=2;
+}
+message UserListV1{
+    required string listName=2;
+    required string categoryName=3;
+    required int64 createDate=5;
+    required int64 modifyDate=6; 
+    optional string listDesc=7;
+}
+
+message UpdateListRequestV1{
+    required string listName=2;
+    required string categoryName=3;
+    optional string newListName=4;
+    optional string description=5;
+}
+message UpdateListResponseV1{
+    required UpdateListStatusV1 status=1;
+}
+
+enum UpdateListStatusV1{
+	UPDATE_LIST_SUCCESS = 1;
+}
+
+message DeleteListRequestV1{
+    required string listName = 1;
+    required string categoryName = 2;
+}
+message DeleteListResponseV1{
+	required DeleteListStatusV1 status=1;
+}
+
+enum DeleteListStatusV1{
+	DELETE_LIST_SUCCESS = 1;
+}
+
+message GetListItemsRequestV1{
+    required string listName = 1;
+    required string categoryName = 2;
+    optional bool sortByLatest = 3;
+}
+message GetListItemsResponseV1{
+	required int32 totalCount=1;
+    repeated ListItemV1 items=2;
+}
+message ListItemV1{
+    required string ean=1;
+    optional string itemDesc=2;
+    required int32 listPos=3;
+    required int64 createDate=4;
+    required int64 modifyDate=5;
+}
+
+
+
+message AddListItemRequestV1{
+	required string listName = 1;
+    required string categoryName = 2;
+	required string ean=3;
+	optional int32 listPos=4;
+	optional string desc=5;
+}
+
+message AddListItemResponseV1{
+	required int32 totalCount=1;
+	repeated ListItemV1 items=2;
+}
+
+message UpdateListItemsRequestV1{
+	required string listName = 1;
+    required string categoryName = 2;
+	repeated UpdateListItemInfoV1 listItems=3;
+}
+
+message UpdateListItemsResponseV1{
+	required int64 totalCount=1;
+	repeated ListItemV1 items=2;
+}
+message UpdateListItemInfoV1{
+    required string ean=1;
+    optional int32 listPos=2;
+    optional string description=3;
+}
+
+message DeleteListItemsRequestV1{
+	required string listName = 1;
+    required string categoryName = 2;
+	repeated string eans=3;
+}
+
+message DeleteListItemsResponseV1{
+	required int32 totalCount=1;
+	repeated ListItemV1 items=2;
+} 
+
+enum ListCategoryV1{
+	WISHLIST = 0;
+	SHELF = 1;
+	USERLIST = 2;
+	FOLDER = 3;
+	COURSE = 4;
+}
+
+
+message ListItemSyncV1{
+	optional productinfo.LibraryProductV2 item =1;
+	required string ean = 2;
+	required int32 listpos = 3;
+	required string description = 4;
+	optional int64 modified_time = 5;
+	optional bool sideLoaded = 6 [default=false];
+	optional bool sample = 7 [default = false];
+	
+}
+message ListSyncV1{
+	optional int64 id = 1;
+	required string name = 2;
+	optional string description = 3;
+	optional int64 modified_time = 4;
+	repeated ListItemSyncV1 items = 5;
+	required ListCategoryV1 category = 6;
+	required int32 position = 7;
+	optional int64 parentListId = 8;
+	optional string parentLuid = 9;
+	optional string metaData = 10;
+	optional int32 itemSortBy = 11;
+	optional int32 shelfSortBy = 12;
+}
+
+
+
+
+
+
+
+

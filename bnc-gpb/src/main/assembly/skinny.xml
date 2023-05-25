@@ -1,0 +1,43 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>skinny</id>
+  <!-- CLOUD-5889 generate a skinny version of GPB jar (target nook android app) -->
+  <formats>
+    <format>jar</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <fileSets>
+    <fileSet>
+      <directory>${basedir}/target/classes</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>**/*.class</include>
+        <include>**/*.proto</include>
+        <include>**/*.xml</include>
+        <include>**/*.properties</include>
+      </includes>
+      <excludes>
+        <!-- the skinny version of GPB is just a subset of full (default) version and following filter defines
+        the packages and classes that are EXCLUDED to make the skinny jar. As we churn more proto files generating
+        more classes, we many need update following filter to trim further -->
+        <exclude>com/bn/gpb/community/BNTinyUrl*</exclude>
+        <exclude>com/bn/gpb/community/CommunityShare*</exclude>
+        <exclude>com/bn/gpb/community/DiscoverLendable*</exclude>
+        <exclude>com/bn/gpb/community/FacebookLendOffer*</exclude>
+        <exclude>com/bn/gpb/community/ShortUrl*</exclude>
+        <exclude>com/bn/gpb/community/v2/*</exclude>
+        <exclude>com/bn/updateService/</exclude>
+        <exclude>com/bn/gpb/account/nookstudy/</exclude>
+        <exclude>com/bn/gpb/media/</exclude>
+        <!-- CLOUD-8212 Update Jan 4 -->
+        <exclude>com/bn/gpb/abc/</exclude>
+        <exclude>com/bn/gpb/dailyedition/</exclude>
+        <exclude>com/bn/gpb/merchpod/</exclude>
+        <exclude>com/bn/gpb/location/</exclude>
+        <exclude>com/bn/gpb/partner/</exclude>
+        <exclude>com/bn/gpb/store/</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+</assembly>

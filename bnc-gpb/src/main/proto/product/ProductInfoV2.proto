@@ -1,0 +1,365 @@
+package productinfo;
+option java_package = "com.bn.gpb.productinfo.v2";
+option java_outer_classname = "ProductInfo";
+option optimize_for = LITE_RUNTIME;
+
+import "envelope/envelope.proto";
+import "product/ProductInfo.proto"; 
+import "extras/extras.proto";
+
+
+message CuratedDataListDetailsV2 {
+	required int32 id=1;
+	required int32 offset=2;
+	required int32 limit=3;
+	optional string hash=4;
+	optional bool idIsIdentifier=5;
+    optional string listIdHash=6; //new field used purely to track usage across pnr
+    optional envelope.RequestNotificationV1 requestNotification=7; //new field used purely to track usage across pnr
+}
+
+message CuratedDataListDetailsResponseV2 {
+	required int32 offset=1;
+    required int32 limit=2;
+    required int32 total=3;
+    optional string name=4;
+    optional string description=5;
+    repeated ProductV2 items=6;
+    required string hash=7;
+    required int64 expiryTime=8;
+    optional string listIdHash=9; //new field used purely to track usage across pnr
+}
+
+message CuratedDataListDetailsV3 {
+	repeated int32 pids=1;
+	required int32 offset=2;
+	required int32 limit=3;
+	optional string hash=4;
+}
+message CuratedDataListDetailsResponseV3 {
+	repeated CuratedDataListDetailsForPid details=1;
+}
+
+message CuratedDataListDetailsForPid{
+	required int32 offset=1;
+    required int32 limit=2;
+    required int32 total=3;
+    required int32 pid=4;
+    optional string name=5;
+    optional string description=6;
+    repeated ProductV2 items=7;
+    required string hash=8;
+    required int64 expiryTime=9;
+}
+
+message ProductDetailsRequestV2 {
+    required string ean=1;
+    optional string hash=2;
+    optional bool force=3;
+}
+ 
+message ProductDetailsResponseV2 {
+    optional ProductV2 product=1;
+    required string hash=2;
+    required int64 expiryTime=3;
+}
+
+message BarcodeEanSearchRequestV1 {
+    optional string ean=1; // Physical book ean
+}
+
+message BarcodeEanSearchResponseV1 {
+    optional string ean=1; // echo physical book ean
+    repeated productinfo.ProductV2 items=2;
+}
+
+message ProductDetailsListRequestV2 {
+    required eanList ean=1;
+    optional string listIdHash=2; //new field used purely to track usage across pnr
+    optional envelope.RequestNotificationV1 requestNotification=3; //new field used purely to track usage across pnr
+}
+ 
+message ProductDetailsListResponseV2 {
+    repeated ProductV2 products=1;
+    optional eanList invalidEan=2; 
+    optional string listIdHash=3; //new field used purely to track usage across pnr
+}
+
+message ProductV2 {
+	required string ean=1;
+	optional string isbn=2;
+    optional string sampleEan=3;
+    optional string issueEan=4;
+    optional string dateOfCurrentIssue=5;
+    optional float issuePrice=6;
+    optional string subscriptionEan=7;
+    optional string subscriptionTitle=8;
+    optional float subscriptionPrice=9;
+    optional string deliveryFrequency=10;
+    required bool availableForSale=11;
+    required ProductTypeV1 productType=12;
+    optional string productCode=13;
+    optional string productSubTypeCode=14;
+    optional string formatCode=15;
+    optional int32 fileSize=16;
+    optional int32 pageCount=17;
+    repeated string titles=18;
+    optional string seriesTitle=19;
+    optional string publisher=20;
+    optional int64 publishedDate=21;
+    optional string soldBy=22;
+    repeated ContributorV1 contributors=23;
+    repeated CategoryV1 categories=24;
+    optional ImagePairV1 images=25;
+    required bool isRecentlyReleased=26; // days to seen  // 90 days
+    required bool isComingSoon=27;  /// to be seen   deliveryCode  if 6 or 9 , it is coming soon.  available in audio book.
+    required bool isBrowsable=28;
+    required bool isLendable=29;
+    required bool isFreeProduct=30;
+    required float onlinePrice=31; //bnprice
+    optional float listPrice=32;    // to be checked .// retailprice ..
+    optional int32 salesRank=33;   // to be checked    right now not available in audio reposnse
+    optional int32 ratingCount=34;
+    optional float avgRating=35;
+    optional string shortSynopsis=36;
+    optional int32 browseMinutes=37;
+    optional int32 loanDays=38;
+    optional int32 ageMin=39;
+    optional int32 ageMax=40;
+    optional extras.ExtrasInfoV1 extrasInfo=41;
+    optional bool isCompatible=42 [default = true];
+    optional int32 incompatibilityReasonCode=43;
+    optional bool isMatureFlag = 44;
+    optional int32 iOSBucketId = 45;
+    optional TextBookInfoV1 textBookInfo=46;
+    optional string subAuthCsPhone=47;      // to be checked   1-800-289-9330
+    optional string subAuthDiscount = 48;         // to be checked ========================================           100
+    optional string subAuthDiscType = 49;        // to be checked                   ========================================     P
+    optional string subAuthFulfillCompany = 50;   // to be checked                ========================================  CDS
+    optional string subAuthPeriodicalCode = 51;   // to be checked               ========================================    GQM ,
+    optional string subAuthPeriodicalCode2 = 52;  // to be checked   ========================================       108342
+    optional string promotionId = 55;
+    optional string analytics = 56;
+    optional string productUrl = 57;
+    optional string potterMoreUrl = 58;
+    optional int32 seriesId = 59;
+    optional bool isSubscription = 60;
+    optional Currency currency=61;
+    optional string language=62;
+    optional VideoInfoV1 video=63;
+    repeated PurchaseOption purchaseOption=64;    //not mapped
+    optional KidsFriendlyV1 kidsFriendly=65;
+    optional int32 productTypeValue=66;
+    optional float discountAmt=67;
+    optional float discountPercent=68;
+    repeated ProductV2 linkedProduct=69;  // ****************  used for audio book project and instore implementation. proto alone added, no implementation. **********************
+    repeated Chapterv1 chapter=70;
+    optional int32 audioCredits=71; // will be available only from credit subscription.
+    optional string audioBookID=72; // common for both audio books.
+    optional string audioRuntime=73;  // common for both audio books.
+    optional string audioSampleURL=74; // common for both audio books.
+    optional string audioRetailFormatCode=75; //A4
+    optional string audioSubscriptionFormatCode=76; //A5
+    optional string audioRetailSubTypeCode=77;
+    optional string audioSubscriptionSubTypeCode=78;
+    optional string audioRetailEan=79;      // must be reuiresd. to avaoid compilation error.
+    optional string audioSubscriptionEan=80;        // must be reuiresd. to avaoid compilation error.
+    optional int64 audioRetailPublishedDate=81;
+    optional int64 audioSubscriptionPublishedDate=82;
+    optional string editionDescription=83;
+    optional int32 seriesNumber=84;
+    optional bool isAudioSubscriptionEanComingSoon=85;
+
+    // isbn ?? product subtype code ??
+}
+
+message Chapterv1 {
+    optional int64 duration=1;
+    optional int32 partNumber=2;
+    optional int32 chapterNumber=3;
+    optional string chapterName=4;
+    optional int64 chapterFileSize=5;
+}
+
+message LibraryProductV2 {
+    required string ean=1;
+    required ProductTypeV1 productType=2;
+    optional string deliveryFrequency=3;
+    optional string productCode=4;
+    optional string productSubTypeCode=5;
+    optional string formatCode=6;
+    optional int32 fileSize=7;
+    optional int32 pageCount=8;
+    repeated string titles=9;
+    optional string subscriptionTitle=10;
+    optional string seriesTitle=11;
+    optional string publisher=12;
+    optional int64 publishedDate=13;
+    repeated ContributorV1 contributors=14;
+    optional string category=15;
+    optional int32 ratingCount=16;
+    optional float avgRating=17;
+    optional string shortSynopsis=18;
+    optional string sampleEan=19;
+    optional string soldBy=20;
+    optional ImagePairV1 image=21;
+    optional string isbn=22;
+    optional extras.ExtrasInfoV1 extrasInfo=23;
+    optional string dateOfCurrentIssue=24;
+    optional bool isMatureFlag = 25;
+    optional TextBookInfoV1 textBookInfo=26;
+    optional RentalExtensionInfoV1 rentalOptions=27;
+    optional string digitalBuyEan = 28;
+    optional string digitalRentEan=29;
+    optional string digitalUpgradeEan=30;
+    optional string mainEan = 31;
+    optional string printBuyEan=32;
+    optional string printRentEan=33;
+    optional bool isAutoUpdatable=34;
+    optional string subAuthDiscount=35;
+    optional string subAuthDiscType=36;
+    optional LibraryVideoInfoV1 libraryVideo=37;
+    optional KidsFriendlyV1 kidsFriendly=38;
+    optional int32 productTypeValue=39;
+    optional int32 seriesId=40;
+    optional int32 seriesNumber=41;
+    optional LibraryAudioInfoV1 libraryAudio=42;
+}
+
+message KidsFriendlyV1{
+    optional int32 appropriateStartAge=1;
+    optional int32 appropriateEndAge=2;
+}
+
+message TextBookInfoV1 {
+    required int32 basicDeviceLimit=1;
+    required int32 enhancedDeviceLimit=2;
+    optional int32 trialPeriodDays=3;
+    optional int32 upgradePeriodDays=4;
+    optional int32 drmSelectionDays=5;
+    optional int32 copyPastePageCount=6;
+    optional int32 printPageCount=7;
+    optional bool  textToSpeech=8;
+}
+
+message RentalExtensionInfoV1 {
+   optional string digitalBuy=1;
+   optional string digitalRent=2;
+   optional string digitalUpgrade=3;
+}
+
+message ReportReviewRequest{
+	required int32 reviewId=1;
+	required int32 value=2;
+}
+
+message FlagReviewRequest{
+	required int32 reviewId=1;
+	required int32 flag=2;
+}
+
+message Currency {
+    required string code=1;
+    required string name=2;
+    required string symbol=3;
+}
+
+message VideoInfoV1 {
+    repeated string episodeEans=1;
+    optional string seasonEan=2;
+    optional bool isSeason=3;
+    optional int32 numberOfEpisodes=4;
+    optional string seasonTitle=5;
+    optional int32 seasonSeqNo=6;
+    optional int32 episodeSeqNo=7;
+    optional bool isUV=8;
+    optional string runtime=9;
+    optional string audioCapability=10;
+    optional string studioLegalCopyright=11;
+    repeated string playbackOption=12;          //different types of play back (not provided by deluxe)
+    repeated ClosedCaption closedCaption=13;
+    optional string assetID=14;                 //Unique identifier for identify the item so it can be recognized when side loading
+    optional string titleID=15;                 //comes from deluxe
+    optional string licensor=16;
+    repeated TrailerInfo trailerInfo=17;
+    repeated RatingInfo ratingInfo=18;
+    optional bool ccAvailable=19;
+}
+
+message LibraryVideoInfoV1 {
+    optional string seasonEan=1;
+    optional bool isSeason=2;
+    optional int32 numberOfEpisodes=3;
+    optional string seasonTitle=4;
+    optional int32 seasonSeqNo=5;
+    optional int32 episodeSeqNo=6;
+    optional bool isUV=7;
+    optional string runtime=8;
+    optional string audioCapability=9;
+    repeated ClosedCaption closedCaption=10;
+    optional string assetID=11;                 //Unique identifier for identify the item so it can be recognized when side loading
+    optional string titleID=12;                 //comes from deluxe
+    optional string licensor=13;
+    repeated RatingInfo ratingInfo=14;
+    optional bool ccAvailable=15;
+}
+
+message LibraryAudioInfoV1 {
+    repeated Chapterv1 chapter=1;
+    optional string audioBookID=2;
+    optional string runtime=3;
+    optional string sampleURL=4;
+    optional string editionDescription=5;
+}
+
+message PurchaseOption {
+    optional string ean=1;                      //contain child ean information
+    optional int32 resolutionType=2;
+    optional int32  purchaseType=3;
+    optional float  price=4;
+    optional Currency currency=5;
+    optional int32 fileSize=6;
+    optional int32 availableDays=7;
+    optional int32 rentalDays=8;
+    optional string percentageSavings=9;
+    optional float subIssuePrice=10;
+}
+
+message ClosedCaption {
+    optional string  fileName=1;
+    optional string  fileFormat=2;
+    optional bool  isSubtitleAvailable=3;
+    optional string  subtitleLanguage=4;
+}
+
+message RemindMeLaterDigestRequestV1 {
+    required string ean=1;
+    required string itemURL=2;
+    required string imageURL=3;
+    optional string itemDescription=4;
+}
+
+message RemindMeLaterDigestResponseV1 {
+    required bool status=1;
+}
+
+message TrailerInfo {
+    optional string trailerId=1;
+    optional string duration=2;
+}
+
+message RatingInfo {
+    optional string ratingType=1;
+    optional string rating=2;
+    optional string ratingReason=3;
+}
+
+message PDPEmailSendRequestV1 {
+    required string ean=1;
+}
+
+message PDPEmailSendResponseV1 {
+     required string ean=1;
+    optional string email=2;
+}
+

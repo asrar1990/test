@@ -1,0 +1,14 @@
+package community;
+option java_package = "com.bn.gpb.community";
+option java_outer_classname = "BNTinyUrl";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+
+message CreateBNTinyUrlRequestV1{
+	required string link = 1;
+}
+
+message CreateBNTinyUrlResponseV1{
+	required string tinyUrl = 1;
+}

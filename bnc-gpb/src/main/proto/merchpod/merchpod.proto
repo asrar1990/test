@@ -1,0 +1,31 @@
+package merchpod;
+
+option java_package = "com.bn.gpb.merchpod";
+option java_outer_classname = "GpbMerchpod";
+option optimize_for = LITE_RUNTIME;
+
+import "product/ProductInfo.proto";
+
+message MerchpodRequestV1 {
+	optional int32 id=1;
+	optional string storeId = 2;
+}
+
+
+message MerchpodResponseV1 {
+	required MerchpodListV1 mPods = 1;
+}
+
+message MerchpodListV1 {
+   repeated MerchpodV1 item=1;
+}
+
+message MerchpodV1 {
+	optional string title = 1;
+	optional string subtitle = 2;
+	required int32 template = 3;
+	optional string uri = 4;
+	optional productinfo.ProductListV1 products = 5;
+	optional productinfo.ImageListV1 images = 6;
+}
+

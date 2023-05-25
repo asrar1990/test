@@ -1,0 +1,114 @@
+package commons;
+option java_package = "com.bn.gpb";
+option java_outer_classname = "GpbCommons";
+option optimize_for = LITE_RUNTIME;
+
+//All generic data types shared across messages
+
+message Error {
+   required string errorCode =1;
+   required string errorText =2;
+   optional string errorDesc =3;
+}
+
+message AuthTokenV1 {
+	optional string token = 1;
+	optional string type = 2;
+	optional string tokenExpireTime = 3;
+	optional int64  duration=4;
+}
+
+message AccountV1 {
+	optional string email = 1;
+	optional string custid = 2;
+	optional string firstName = 3;
+	optional string lastName = 4;
+	optional int64  accountid = 5;
+	optional string accountHash = 6;
+	optional string partnerId = 7;
+	optional string partnerAccountId = 8;
+	optional string userAuthToken = 9;
+}
+
+message DeviceV1 {
+	required string serialNum = 1;
+	optional string softwareVersion = 2;
+	optional string modemFirmware = 3;
+    required string model = 4;
+    optional string imei = 5;
+    optional string imsi = 6;
+    optional string buildNumber = 7;
+    optional string publicKey=8;
+	optional string hashPrivateKey=9;
+	optional int64  deviceId=10;
+	optional string iccid=11;
+	optional string endpointType=12;
+	optional string ean=13;
+	optional LocaleV1 productLocale=14;
+	optional string countryOfResidence=15;
+}
+
+message DownloadURLV1 {
+	required string key=1;
+	required string url=2;
+}
+
+//Dummy response when commands have nothing to report back
+message BasicResponse{
+	optional bool isError=1 [default=false];
+	optional string message=2;
+}
+
+enum ImageType { RESULTS_IMAGE=0;
+ 				 MEDIUM_IMAGE=1;
+ 				 COMMUNITY_THUMBNAIL=2;
+ 				 GOOGLE_IMAGE=3; 
+ 				 PRODUCT_IMAGE=4;
+ 				 LARGE_IMAGE=5;
+};
+ 				 
+enum ErrorType { UNKNOWN=0;
+				 BNCLOUD=1;
+ 				 DEVICE=2;
+ 				 USER=11;
+};
+
+message LocaleV1 {
+	required string language=1;
+	required string country=2;
+}
+
+message ExtraInfoV1 {
+	required string key=1;
+	required string value=2;
+	optional string type=3;
+}
+
+message RetailerInfoV1 {
+    required string retailerId=1;
+    optional string retailerName=2;
+    required string countryId=3;
+    optional string countryName=4;
+    repeated ExtraInfoV1 attributes=5;
+}
+
+message CountryOfResidenceRequestV1 {
+    optional string deviceModel=1;
+    optional string serialNumber = 2;
+}
+
+message CountryOfResidenceResponseV1 {
+   repeated CountryInfoV1 countryInfo=1;
+}
+
+message CountryInfoV1 {
+   required string countryCode=1;
+   required string countryName=2;
+   repeated LanguageV1 language=3;
+}
+
+message LanguageV1{
+    required string languageCode=1;
+    required string countryCode=2;
+    optional string description=3;
+}

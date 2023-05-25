@@ -1,0 +1,78 @@
+package account;
+option java_package = "com.bn.gpb.account";
+option java_outer_classname = "GpbLending";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "sync/sync.proto";
+import "product/ProductInfo.proto";
+import "license/Reader.proto";
+
+//lend offer
+message LendOfferRequestV1 {
+  required int64  deliveryId=1;
+  required string ean=2;
+  required string recipientEmail=3;
+  optional string lendMessage=4;
+  optional productinfo.ProductTypeV1 itemType=5;
+}
+
+message LendOfferRequestV2 {
+  required int64  deliveryId=1;
+  required string recipientEmail=2;
+  optional string lendMessage=3;
+  optional productinfo.ProductTypeV1 itemType=4;
+  optional int32 productTypeValue=5;
+}
+
+message LendOfferResponseV1 {
+  optional string ean=1;
+  optional sync.SyncItem item=2;
+}
+
+//lend accept/reject
+message LendOfferAcceptedRequestV1 {
+  required int64  lendItemId=1;
+  repeated reader.ReaderInfoV1 readerInfo=2;
+}
+
+message LendOfferAcceptedResponseV1 {
+	optional string ean=1;
+	optional bytes	licenseFile=2;
+	repeated commons.DownloadURLV1 downloadUrls=3; 
+    repeated sync.SyncItem items=4;
+    optional string environment=5;
+    optional string mediaType=6;
+    optional string ebookKey=7;
+    optional int32 licenseType=8;
+}
+
+message LendOfferRejectedRequestV1 {
+  required int64  lendItemId=1;
+}
+
+message LendOfferRejectedResponseV1 {
+	optional string ean=1;
+    repeated sync.SyncItem items=2;
+}
+
+//return lend offer
+message LendOfferReturnedRequestV1 {
+  required int64 lendItemId=1;
+}
+
+message LendOfferReturnedResponseV1 {
+  optional int32 itemState=1;
+  optional int64 lendItemId=2;
+  optional sync.SyncItem items=3;
+}
+
+
+message GetLendOfferIdRequestV1 {
+  required string ean=1;
+  required int32  itemCode=2;
+}
+
+message GetLendOfferIdResponseV1 {
+  optional int64  deliveryId=1;
+}

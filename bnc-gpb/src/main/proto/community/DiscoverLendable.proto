@@ -1,0 +1,148 @@
+package community;
+option java_package = "com.bn.gpb.community";
+option java_outer_classname = "DiscoverLendable";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "product/ProductInfo.proto";
+
+message DiscoverLendableBooksByBookRequestV1{
+	required int32 offset = 1;
+	required int32 limit = 2;
+	optional string searchTerm = 3;
+	repeated string emailAddress = 4;	
+}
+
+message DiscoverLendableBooksByBookResponseV1{
+	required int32 totalCount = 1;
+	repeated DiscoverLendableBookListV1 books = 2;
+	
+}
+
+message DiscoverLendableBookListV1{
+	required DiscoverLendableBookInfoV1 bookInfo = 1;	
+	repeated DiscoverLendableContactInfoV1 contacts = 2;
+}
+
+message DiscoverLendableBooksByContactRequestV1{
+	required int32 offset = 1;
+	required int32 limit = 2;	
+	repeated string emailAddress = 3;
+}
+
+message DiscoverLendableBooksByContactResponseV1{
+	required int32 contactCount = 1;
+	repeated DiscoverLendableContactListV1 contacts = 2;
+	
+}	
+message DiscoverLendableContactListV1{	
+	required DiscoverLendableContactInfoV1 contactInfo = 1;
+	repeated DiscoverLendableBookInfoV1 books = 2;
+}
+
+message DiscoverLendableBookInfoV1{
+	required string ean = 1;
+	required string author = 2;
+	required string title = 3;
+	optional string imageUrl = 4;
+	optional bool productTypeSupported = 5;
+}
+
+message DiscoverLendableContactInfoV1{
+	required int64 accountId = 1;
+	optional string firstName = 2;
+	optional string lastName = 3;
+	required string email = 4;
+	optional string imageUrl = 5;
+}
+
+message SendLendRequestToContactRequestV1{
+	required string ean = 1;
+	required string email = 2;
+	optional string message = 3;
+}
+
+message SendLendRequestToContactResponseV1{
+	required SendLendRequestToContactStatusV1 status = 1;
+}
+
+enum SendLendRequestToContactStatusV1{
+	LEND_BOOK_REQUEST_SUCCESS = 1;
+}
+
+message GetDiscoverableBooksRequestV1{
+	optional bool nookFriendVersion = 1;
+}
+
+message GetDiscoverableBooksResponseV1{
+	required int32 totalCount = 1;
+	repeated LenderDiscoverableBookV1 books = 2;
+	required bool discoverPrivacyOption = 3;
+}
+
+message LenderDiscoverableBookV1{
+	required string ean = 1;
+	required bool status = 2;
+}
+
+message SetDiscoverPrivacyOptionRequestV1{
+	required bool value = 1;
+	optional bool nookFriendVersion = 2;
+}
+
+message SetDiscoverPrivacyOptionResponseV1{
+	required SetDiscoverPrivacyOptionStatusV1 status = 1;		
+}
+
+enum SetDiscoverPrivacyOptionStatusV1{
+	SET_DISCOVER_PRIVACY_OPTION_SUCCESS = 1;
+}
+
+message UpdateDiscoverableBookStatusRequestV1{
+	required string ean = 1;
+	required bool status = 2;
+}
+
+message UpdateDiscoverableBookStatusResponseV1{
+	required UpdateDiscoverableBookStatusV1 status = 1;		
+}
+enum UpdateDiscoverableBookStatusV1{
+	UPDATE_DISCOVERABLE_BOOK_STATUS_SUCCESS = 1;
+}
+
+message GetLendRequestTokenRequestV1{
+	required string ean = 1;
+	required string email = 2;
+}
+
+message GetLendRequestTokenResponseV1{
+	required string token = 1;
+}
+
+enum LendRequestAnswerTypeV1{
+	DECLINE = 0;;
+	ACCEPT = 1;
+}
+
+message LendRequestAnswerRequestV1{
+	required int64 lendRequestId = 1;
+	required LendRequestAnswerTypeV1 answer = 2;
+}
+message LendRequestAnswerResponseV1{
+	required LendRequestAnswerStatusV1 status = 1;
+}
+
+enum LendRequestAnswerStatusV1{
+	LEND_REQUEST_ANSWER_SUCCESS = 1;
+}
+
+message DiscoverBooksByFriendRequestV1{
+	required int32 offset = 1;
+	required int32 limit = 2;
+	required int64 friendAccountId = 3;
+}
+message DiscoverBooksByFriendResponseV1{
+	required int32 totalCount = 1;
+	repeated DiscoverLendableBookInfoV1 books = 2;
+}
+

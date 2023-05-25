@@ -1,0 +1,81 @@
+package community;
+option java_package = "com.bn.gpb.community";
+option java_outer_classname = "CommunityShare";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "community/CommunityRecommend.proto";
+ 
+message ShareQuoteToPublicRequestV1{
+	required string ean = 1;
+	optional string quote = 6;
+	required SocialNetworkV1 socialNetwork = 7;
+    optional string userComment = 8;
+    repeated string facebookIds = 9;		
+}
+
+message ShareQuoteToPublicResponseV1{
+	required ShareQuoteToPublicStatusV1 status = 1;	
+}
+
+enum ShareQuoteToPublicStatusV1{
+	SHARE_QUOTE_PUBLIC_SUCCESS = 1;
+}
+
+message ShareReadingStatusRequestV1{
+	required string ean = 1;
+	required bool facebook = 2;
+	required bool twitter = 3;
+	required int32 percentage =4;
+	optional int32 chapter = 5;
+	optional int32 page = 6;
+}
+
+message ShareReadingStatusResponseV1{
+	required ShareReadingStatusV1 status = 1;
+}
+
+enum ShareReadingStatusV1{
+	SHARE_READING_STATUS_SUCCESS = 1;
+}
+
+message ShareQuoteToFriendRequestV1{
+    required string ean=1;
+    repeated ShareQuoteToFriendInfoV1 friends = 2;
+    required string quote = 6;
+    optional string userComment = 8;	
+    
+}
+
+message ShareQuoteToFriendInfoV1{
+	required string email = 1;
+	optional string firstName = 2;
+    optional string lastName = 3;
+}
+ 
+message ShareQuoteToFriendResponseV1{
+	required ShareQuoteToFriendStatusV1 status=1;
+}
+
+enum ShareQuoteToFriendStatusV1{
+	SHARE_QUOTE_TO_FRIEND_SUCCESS = 1;
+}
+
+message GetFriendShareQuotesRequestV1{
+	required int64 lastShareQuoteId = 1;
+}
+
+message GetFriendShareQuotesResponseV1{
+	required int32 count = 1;
+	repeated FriendShareQuoteInfoV1 quoteShares = 2;
+} 
+
+message FriendShareQuoteInfoV1{
+	required string ean = 1;
+	required string firstName = 2;
+	required string lastName = 3;
+	required string message = 4;
+	required string quote = 5;
+	required int64 shareId = 6;
+}
+

@@ -1,0 +1,42 @@
+
+// obsolete - do not use. All license types use licenseFile + licenseType fields instead
+
+package license;
+option java_package = "com.bn.gpb.license";
+option java_outer_classname = "GpbLicense";
+option optimize_for = LITE_RUNTIME;
+
+message KeyV1 {
+	required int32 encType=1;
+	required bytes encryptedKey=2;
+}
+
+message PermissionsV1 {
+	required bool display=1;
+	required bool extract=2;
+	required bool print=3;
+	required bool perform=4;
+}
+
+message LicenseV1 {
+	required string contentid=1;
+	required KeyV1 contentkey=2;
+	required PermissionsV1 perms=3;
+	required int64 startDate=4;
+	required int64 endDate=5;
+	optional string userid=6;
+	optional string deviceSerial=7;
+	//a valid license must have either the userid or the deviceSerial
+
+}
+
+message LicenseSignatureV1{
+	required int64 signDate=1;
+	required string signer_serial_number=2;
+	required bytes encDigest=3;
+}
+
+message SignedLicenseV1{
+	required LicenseV1 license=1;
+	optional LicenseSignatureV1 signature=2;
+}

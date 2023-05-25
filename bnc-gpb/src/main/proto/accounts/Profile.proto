@@ -1,0 +1,121 @@
+package profile;
+option java_package = "com.bn.gpb.profile";
+option java_outer_classname = "GpbProfile";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "sync/sync.proto";
+import "product/ProductInfoV2.proto";
+
+//CreateAccount Profile
+message CreateAccountProfileRequestV1 {
+    required int32 profileType=1;
+    required string firstName=2;
+    optional string lastName=3;
+}
+
+message CreateAccountProfileResponseV1 {
+    required int32 resultCode=1;
+    optional sync.SyncItem profile=2;
+}
+
+//GetAllInterest
+message GetInterestsRequestV1 {
+    optional int64 profileid=1;
+}
+
+message GetInterestsResponseV1 {
+    repeated InterestInfoV1 interests=1;
+    optional AccountProfileInterestInfoV1 profileInterest=2;
+}
+
+//GetSampleEans
+message GetProductsForInterestsRequestV1 {
+    repeated InterestInfoV1 interests=1;
+    optional AccountProfileInterestInfoV1 profileInterest=2;
+    optional string gender=3;
+    optional int64  profileid=4;
+}
+
+message GetProductsForInterestsResponseV1 {
+    repeated productinfo.ProductV2 item=1;
+}
+
+
+
+//Account profile
+message AccountProfileV1 {
+    optional int64  profileid=1;
+    optional int32  status=2;
+    optional AccountProfileInfoV1 profileInfo=3;
+    optional AccountProfileInterestInfoV1 profileInterest=4;
+    optional WishListV1 wishList=5;
+    optional UserPreferenceInfoV1 userPreferenceInfo=6;
+}
+
+message InterestInfoV1 {
+    optional string id=1;
+    optional string title=2;
+    optional string description=3;
+    optional string imageUrl=4;
+}
+
+message WishListV1 {
+    repeated string ean=1;
+}
+
+message AccountProfileInfoV1 {
+    repeated ProfileInfoTypeV1 profileInfoType=1;
+}
+
+message ProfileInfoTypeV1 {
+    required string type=1;
+    required string key=2;
+    required string value=3;
+}
+
+message AccountProfileInterestInfoV1 {
+    repeated InterestInfoTypeV1 interestInfoType=1;
+}
+
+message InterestInfoTypeV1 {
+    optional string id=1;
+    optional string title=2;
+    optional string description=3;
+    optional string imageUrl=4;
+}
+
+message UserPreferenceInfoV1 {
+    repeated UserPreferenceTypeV1 userPreferenceType=1;
+}
+
+message UserPreferenceTypeV1 {
+    required string type=1;
+    required string key=2;
+    required string value=3;
+}
+
+//Get FavoriteCategory
+message FavoriteCategoryRequestV1 {
+    optional int64 profileId=1;
+    optional string shophome=2; //ebook/audiobook
+}
+message FavoriteCategoryInfoV1 {
+   optional string id=1;
+   optional string label=2;
+}
+message FavoriteCategoryResponseV1 {
+    repeated FavoriteCategoryInfoV1 favoriteCategory=1;
+}
+
+//Set FavoriteCategory
+message SetFavoriteCategoryRequestV1 {
+    optional int64 profileId=1;
+    optional string shophome=2; //ebook/audiobook
+    repeated FavoriteCategoryInfoV1 favoriteCategory=3;
+}
+
+message SetFavoriteCategoryResponseV1 {
+    optional int64 profileId=1;
+    optional string shophome=2; //ebook/audiobook
+}

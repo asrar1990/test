@@ -1,0 +1,10 @@
+package reader;
+option java_package = "com.bn.gpb.license";
+option java_outer_classname = "GpbReader";
+option optimize_for = LITE_RUNTIME;
+
+message ReaderInfoV1{
+    //device has multiple rendering engines, need to know which type / version
+    required int32 readerType=1;
+    required string readerVersion=2;
+}

@@ -1,0 +1,29 @@
+package abc;
+option java_package = "com.bn.gpb.abc";
+option java_outer_classname = "GpbAbcService";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+
+message BnAccountRequestV1{
+	repeated string email = 1;
+}
+
+message BnAccountResponseV1{
+	repeated commons.AccountV1 result = 1;
+}
+
+message GetSocialSettingsRequestV1 {
+}
+
+message GetSocialSettingsResponseV1 {
+	required bool autoFriend = 1;	
+}
+
+message SetSocialSettingsRequestV1 {
+	required bool autoFriend = 2;	
+}
+
+message SetSocialSettingsResponseV1 {
+	required bool result = 1;	
+}

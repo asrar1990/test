@@ -1,0 +1,147 @@
+package search;
+option java_package = "com.bn.gpb.search.v2";
+option java_outer_classname = "GpbSearch";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "product/ProductInfo.proto";
+import "product/ProductInfoV2.proto";
+import "product/Search.proto";
+import "envelope/envelope.proto";
+
+//****** UPDATED UBER-SEARCH (A1) .. SEARCH & BROWSE have been merged ****** 
+message ProductSearchV2 {
+   optional int32 categoryId=1;
+   optional string searchText=2;
+   required int32 offset=3 [default = 0];
+   optional int32 limit=4;
+   optional productinfo.ProductTypeV1 type=5;
+   optional SearchType search=6;
+   optional SortOrder sort=7;
+   optional string hash=8;
+   optional string listIdHash=9; //new field used purely to track usage across pnr
+   optional envelope.RequestNotificationV1 requestNotification=10; //new field used purely to track usage across pnr
+   optional string filter=11; //useful for navigation from CDS-II
+   optional bool overrideFilterValues=12; //boolean to indicate if parameters specified in the "filter" attribute need to be overridden by corresponding other attributes in this gpb
+   optional int32 productTypeValue=13;
+   optional string  context=14; //freetext string to indicate which screen the user performed a search from
+   optional bool searchFree=15; //search for free titles
+   optional bool searchSample=16; //search for for samples
+   optional string language=17; //Two letter ISO 639-1 code or three letter ISO 639-2 code
+}
+
+message SearchResultV2 {
+    required int32 offset=1;
+    required int32 limit=2;
+    required int32 total=3;
+    repeated productinfo.ProductV2 items=4;
+    optional string hash=5;
+    optional int64 expiryTime=6;
+    optional SortOrder sort=7;
+    optional string listIdHash=9; //new field used purely to track usage across pnr
+}
+
+message ListRequestV1{
+    required int32 context=1; // supported values from GPBAppConstants.ListContext
+}
+
+message ListResponseV1{
+    repeated ListItem listItem=1;
+    optional string hash=2;
+    optional int64 expiryTime=3;
+}
+
+message ListItem{
+    optional string id=1;
+    optional string name=2;
+    optional int32 order=3;
+    optional string description=4;
+    optional int32 type=5; //values from DisplayType enum
+    optional int32 productType=6; //values from GPBAppConstants.PRODUCT_TYPE values
+    optional int32 contentType=7; //values from GPBAppConstants.ContentType enum
+    optional string imageUrl=8;
+    optional int32 renderSection=9; //values from GPBAppConstants.RenderSection enum;
+    optional int32 endpoint=10; // value from GPBAppConstants.EndPoint
+    optional string filter = 11;
+    optional int64 childCount=12; //categories containing more sub-categories
+
+    //windows 8 devices need to show longer descriptions.
+    //I cannot use the "description" field anymore since 1.4.3 devices already use that field and expect a shorter string
+    //So adding a new field to store the long description
+    optional string longDescription=13;
+
+    optional int32 weight=14; //for refinements
+}
+
+message ListDetailsRequestV1{
+    optional string id=1;
+    required int32 context=2;
+    repeated ListParam param=3;
+    optional string listIdHash=4;
+    optional envelope.RequestNotificationV1 requestNotification=5; //new field used purely to track usage across pnr
+}
+
+message ListParam{
+    required string name=1; //values supported GPBAppConstants.ListParamName
+    required string value=2;
+}
+
+message ListDetailsProducts{
+    optional int32 endpoint=1;
+	optional string listId=2;
+	repeated productinfo.ProductV2 product=3;
+	optional int32 total=4;
+	optional string filter=5;
+	optional string description=6;
+	optional SortOrder sort=7;
+	optional bool showCount=8 [default=true];
+	optional string listIdHash=9;
+
+}
+
+message ListProduct{
+    optional int32 endpoint=1;
+	optional string listId=2;
+	optional productinfo.ProductV2 product=3;
+	optional string filter=4;
+}
+
+message ListDetailsResponseV1{
+    optional string listId=1;
+	repeated ListItem lists=2;
+	repeated ListDetailsProducts products =3;
+	repeated ListProduct product=4;
+
+    optional string hash=5;
+    optional int64 expiryTime=6;
+    optional string listIdHash=7;
+}
+
+message InstantCollectionsRequestV1{
+    optional int32 offset=3;
+    optional int32 limit=4;
+}
+message InstantCollectionsResponseV1{
+    repeated ListItem items=1;
+    optional string hashValue=2;
+    optional int64 expiryTime=3;
+    optional int32 offset=4;
+    optional int32 limit=5;
+    optional int32 total=6;
+}
+message InstantCollectionDetailsRequestV1{
+    required string id=1;
+    optional string listIdHash=2;
+    optional int32 offset=3;
+    optional int32 limit=4;
+    optional envelope.RequestNotificationV1 requestNotification=5; //new field used purely to track usage across pnr
+}
+message InstantCollectionDetailsResponseV1{
+    repeated productinfo.ProductV2 products=1;
+    optional string hashValue=2;
+    optional int64 expiryTime=3;
+    optional int32 offset=4;
+    optional int32 limit=5;
+    optional int32 total=6;
+    optional string listIdHash=7;
+}

@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: device-service
+  cloud:
+    config:
+      enabled: false
+      # target URI for config server corresponds to Kubernetes Service config-service
+#      uri: http://localhost:8888
+      uri: http://config-server:80
+      fail-fast: true
+      retry:
+        # retry configuration retrieval up to 100 times
+        max-attempts: 30
+        # max backoff interval
+        max-interval: 8000

@@ -1,0 +1,23 @@
+package account;
+option java_package = "com.bn.gpb.account";
+option java_outer_classname = "GpbPurchaseV2";
+option optimize_for = LITE_RUNTIME;
+
+import "accounts/Purchase.proto";
+import "common/Common.proto";
+import "license/Reader.proto";
+
+
+// getUrlsAndLicense
+message UrlsAndLicenseRequestV2 {
+    optional bytes jsonRequest=1;
+    optional string ean=2;
+    optional int32 versionCode=3;
+    optional DownloadType type=4;
+    repeated reader.ReaderInfoV1 readerInfo=5;
+    optional int32 productTypeValue=6;
+}
+
+ message UrlsAndLicenseResponseV2 {
+ 	required string jsonResponse=1;
+ }

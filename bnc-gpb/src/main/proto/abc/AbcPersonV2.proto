@@ -1,0 +1,45 @@
+package abc;
+option java_package = "com.bn.gpb.abc.v2";
+option java_outer_classname = "GpbAbcPerson";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "abc/AbcPerson.proto";
+
+enum FriendStatusV1 {
+	CONTACT=0;           			// ordinary contact
+	CONTACT_FAVORITE=1;  			// a favorite contact that the cloud should track, but they are not a nook friend
+	FRIEND=2;		 				// a nook friend, which allows for features like implied sharing
+	FRIEND_INVITE=3; 				// an invite to become a friend
+	FRIEND_REQ=4;	 				// a nook friend request was made by this contact.
+	NOT_ELIGIBLE=5;					// the person invited does not have a bn account
+	FRIEND_ACCEPT=6;				// accept friend request (treat same as friend)
+	FRIEND_REJECT=7;				// reject friend request
+	INVITE_DENIED=8;				// friend invitation was denied
+	CANCEL_FRIENDSHIP=9;			// cancel an existing friendship (on src ABC)
+	FRIEND_CANCELED=10;				// friendship was canceled from the other end 
+}
+	
+message NetTypeBnId {
+	optional int32 key=1;
+	optional int64 value=2;
+}
+
+message PersonV2 {	
+	optional string firstName = 1;				// first name of contact
+	optional string lastName = 2;				// last name of contact
+	optional string pictureUrl = 3;				// url of facebook picture
+	repeated string emails = 4;					// common delimited emails
+	required int64 memberFlags = 5;				// what member is the contact associated with
+	required bool deleted = 6;					// contact is deleted from the server
+	optional string facebookUid = 7;			// facebook uid
+	optional string googleUid = 8;				// google uid
+	optional string linkedinUid = 9;			// linkedin uid
+	optional string yahooUid = 10;				// yahoo uid	
+	required int64 bnAccountId = 11;			// bnaccountId associated by an email
+	required FriendStatusV1 friendStatus=12;	// nook friend
+	optional string friendEmail=13;				// email to use to establish nook friend
+	
+	optional int64 pictUrlHash=14;				// hash of base url string picture location
+	repeated NetTypeBnId netMatchBnId = 15;		// network match with bnaccountId
+}

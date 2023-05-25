@@ -1,0 +1,36 @@
+package extras;
+option java_package = "com.bn.gpb.extras";
+option java_outer_classname = "Extras";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "product/ProductInfo.proto";
+import "sync/sync.proto";
+
+//Update Request
+message CheckForUpdateRequestV1 {
+}
+
+message CheckForUpdateResponseV1 {
+    required int32 updateCount=1;
+    repeated sync.SyncItem items=2; //SYNC item with list of Library Objects
+}
+
+message ExtrasInfoV1 {
+  required int32 versionCode=1;
+  required string versionName=2;
+  required int64 versionDate=3;
+  repeated productinfo.ImagePairV1 screenshots=4;
+  required productinfo.ImagePairV1 icons=5;
+  repeated string supportedDeviceVersions=6;
+  optional bool requiresConnectivity=7;
+  optional SupportContactInfoV1 supportInfo=8;
+  required int64 footprint=9;
+  optional string trialType=10;
+}
+
+message SupportContactInfoV1 {
+  optional string phone=1;
+  optional string email=2;
+  optional string url=3;
+}

@@ -1,0 +1,62 @@
+package sync;
+option java_package = "com.bn.gpb.sync.v2";
+option java_outer_classname = "SyncUpgradeGPB";
+option optimize_for = LITE_RUNTIME;
+
+import "product/ProductInfoV2.proto";
+
+enum Columns {
+    ISDOWNLOADABLE = 1;
+    DOWNLOADRESTRICTIONCAUSE = 2;
+    LENDPARTYTYPE = 3;
+    SUBSCRIPTIONTITLE = 4;
+    SMALLIMAGEURL = 5;
+    LARGEIMAGEURL = 6;
+    CATEGORY = 7;
+    SERIESID = 8;
+    SERIESNUMBER = 9;
+    PRIMARYCONTRIBUTORID = 10;
+    PRIMARYCONTRIBUTORLASTNAME = 11;
+    PRIMARYCONTRIBUTORFIRSTNAME = 12;
+    DEFAULTPROFILEID = 13;
+    APPROPRIATESTARTAGE = 14;
+    APPROPRIATEENDAGE = 15;
+    SERIESTITLE = 16;
+    PAGECOUNT = 17;
+    PRODUCTTYPEVALUE=18;
+    PURCHASEDEAN=19;
+    DATEOFCURRENTISSUE=20;
+    ISMATUREFLAG=21;
+    DIGITALBUYEAN=22;
+    DIGITALRENTEAN=23;
+    DIGITALUPGRADEEAN=24;
+    MAINEAN=25;
+    SUBAUTHDISCOUNT=26;
+    SUBAUTHDISCTYPE=27;
+    PRODUCTEAN=28;
+};
+
+message SyncUpgradeRequestV1{
+   required int64 anchor=1;
+   repeated Columns columns=2;
+   optional int32 chunkSize=3;
+}
+
+message SyncUpgradeResponseV1 {
+   required int64 anchor=1;
+   repeated UpgradeDetail data=2;
+   optional bool continuationNeeded=3;
+}
+
+message Pair {
+   required Columns key=1;
+   optional string value=2;
+}
+
+message UpgradeDetail {
+   required string guid=1;
+   required string luid=2;
+   repeated Pair data=3;
+   optional productinfo.LibraryAudioInfoV1 libraryAudio=4;
+   optional string audioLicenseKey=5;
+}

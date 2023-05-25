@@ -1,0 +1,133 @@
+package community;
+option java_package = "com.bn.gpb.community";
+option java_outer_classname = "CommunityRecommend";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "product/ProductInfo.proto";
+import "product/ProductInfoV2.proto";
+
+message RecommendToPublicRequestV1{
+	required string ean=1;
+    required SocialNetworkV1 socialNetwork = 2;
+    optional string userComment = 3;
+    repeated string facebookUserId = 4;
+    
+ }
+ message RecommendToPublicResponseV1{
+	required RecommendToPublicStatusV1 status=1;
+ }
+ enum RecommendToPublicStatusV1{
+	RECOMMEND_PUBLIC_SUCCESS = 1;
+}
+ 
+ enum SocialNetworkV1 { 
+ 	FACEBOOK = 1; 
+ 	TWITTER = 2;
+ 	BNCLOUD = 3;
+ }
+ 
+ 
+message RecommendToFriendRequestV1{
+    required string ean=1;
+    repeated RecommendToFriendInfoV1 friends = 2;
+    optional string desc=3;
+}
+
+message RecommendToFriendInfoV1{
+	required string email = 1;
+	optional string firstName = 2;
+    optional string lastName = 3;
+}
+ 
+message RecommendToFriendResponseV1{
+	required RecommendToFriendStatusV1 status=1;
+}
+
+enum RecommendToFriendStatusV1{
+	SUCCESS = 1;
+}
+
+
+message GetFriendRecommendationsRequestV1{
+	required int64 lastRecommendationId = 1;
+}
+
+message GetFriendRecommendationsResponseV1{
+	required int32 count = 1;
+	repeated FriendRecommendationInfoV1 recommendations = 2;
+} 
+
+message FriendRecommendationInfoV1{
+	required productinfo.ProductV1 product = 1;
+	required int64 contactAccountId = 2;
+	required string contactEmail =3;
+	required string firstName = 4;
+	required string lastName = 5;
+	required string message = 6;
+	required int64 recId = 7;
+	optional string pictureUrl =8;
+	optional int64 pictureHash = 9;
+	optional bool productTypeSupported = 10;
+}
+
+message FriendRecommendationInfoV2{
+	required productinfo.ProductV2 product = 1;
+	required int64 contactAccountId = 2;
+	required string contactEmail =3;
+	required string firstName = 4;
+	required string lastName = 5;
+	required string message = 6;
+	required int64 recId = 7;
+	optional string pictureUrl =8;
+	optional int64 pictureHash = 9;
+	optional bool productTypeSupported = 10;
+}
+
+message FacebookLikeRequestV1{
+	required string ean=1;
+	optional bool unlike=2 [default = false];
+    
+ }
+ message FacebookLikeResponseV1{
+	required FacebookLikeStatusV1 status=1;
+ }
+ enum FacebookLikeStatusV1{
+	FACEBOOK_LIKE_SUCCESS = 1;
+}
+message GetFacebookLikesRequestV1{
+	required bool retrieveProduct = 1;
+}
+message GetFacebookLikesResponseV1{
+	repeated FacebookLikeV1 likes = 1; 
+}
+
+message FacebookLikeV1{
+	required string ean = 1;
+	required bool likedByUser = 2;
+	required int64 friendCount = 3;
+	optional productinfo.ProductV2 product = 4;
+	
+}
+
+message GetFacebookLikeCountsRequestV1{
+	required string ean = 1;
+}
+
+message GetFacebookLikeCountsResponseV1{
+	required bool likedByUser = 1;
+	required int64 publicCount = 2;
+	repeated CommunityContactV1 friends = 3;
+	
+}
+
+message CommunityContactV1{
+	optional string firstName = 1;
+	optional string lastName = 2;
+	optional int64 accountId = 3;
+	optional string facebookUid = 4;
+	optional string pictureUrl =5;
+	optional int64 pictureHash = 6;
+	optional string email = 7; 
+}
+

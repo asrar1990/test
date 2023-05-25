@@ -1,0 +1,92 @@
+package search;
+option java_package = "com.bn.gpb.search";
+option java_outer_classname = "GpbSearch";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "product/ProductInfo.proto";
+import "product/ProductInfoV2.proto";
+import "envelope/envelope.proto";
+
+//****** QUICK SEARCH ****** 
+message QuickSearchV1 {
+   required string searchText =1;
+   required int32 limit=2;
+   optional int32 profileType =3; //values from GPBAppConstants.ProfileType enum
+}
+
+message QuickSearchResultV1 {
+    required int32 count =1;
+    repeated string result=2;
+}
+
+//****** UPDATED UBER-SEARCH (A1) .. SEARCH & BROWSE have been merged ****** 
+message ProductSearchV1 {
+   optional int32 categoryId=1;
+   optional string searchText=2;
+   required int32 offset=3 [default = 0];
+   optional int32 limit=4;
+   optional productinfo.ProductTypeV1 type=5;
+   optional SearchType search=6;
+   optional SortOrder sort=7;
+   optional string hash=8;
+}
+  
+enum SearchType {
+	KEYWORD=0;
+	TITLE=1;
+	CONTRIBUTOR=2;
+	PUBLISHER=3;
+	CONTRIBUTOR_ID=4;
+	SERIES_ID=5;
+    CATEGORY_ID=6; // Instant Collections NOT refinements
+}
+
+enum SortOrder   { 
+	RELEVANCE =0;
+	SALESRANK_ASC=1;
+	SALESRANK_DESC=2;
+	PRICE_ASC=3;
+	PRICE_DESC=4;
+	TITLE_ASC=5;
+	TITLE_DESC=6;
+	PUBLICATION_DATE_ASC=7;
+	PUBLICATION_DATE_DESC=8;
+ }
+
+message SearchResultV1 {
+    required int32 offset =1;
+    required int32 limit  =2;
+    required int32 total  =3;
+    optional productinfo.ProductListV1 items=4;
+    optional string hash=5;
+    optional int64 expiryTime=6;
+}
+ 
+//****** PRODUCT CATEGORY (A1) ******
+ message CategoryRequestV1 {
+  	required productinfo.ProductTypeV1 type=1;
+  	optional int32 parentid=2;
+    optional string hash=3;
+    optional int32 productTypeValue=4;
+ }
+
+ message CategoryRequestV2 {
+  	optional productinfo.ProductTypeV1 type=1;
+  	optional int32 parentid=2;
+    optional string hash=3;
+    optional string listIdHash=4; //used by pnr service
+    optional envelope.RequestNotificationV1 requestNotification=5; //new field used purely to track usage across pnr
+    optional int32 productTypeValue=6;
+}
+
+ 
+ //******* moved products to the end of the list *********
+ message CategoryResponseV1 {
+  	required int32 total=1; 
+  	optional productinfo.CategoryListV1 items=2;
+  	optional string hash=3;
+  	optional int64 expiryTime=4;
+  	repeated productinfo.ProductV2 products=5;
+  	optional string listIdHash=6; //used by pnr service
+ }

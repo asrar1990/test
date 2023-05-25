@@ -1,0 +1,55 @@
+package community;
+option java_package = "com.bn.gpb.community.v2";
+option java_outer_classname = "DiscoverLendable";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "product/ProductInfo.proto";
+
+message DiscoverLendableBooksByBookRequestV2{
+	required int32 offset = 1;
+	required int32 limit = 2;
+	optional string searchTerm = 3;
+}
+
+message DiscoverLendableBooksByBookResponseV2{
+	required int32 totalCount = 1;
+	repeated DiscoverLendableBookListV2 books = 2;
+}
+
+message DiscoverLendableBookListV2{
+	required DiscoverLendableBookInfoV2 bookInfo = 1;	
+	repeated DiscoverLendableContactInfoV2 contacts = 2;
+}
+
+message DiscoverLendableBooksByContactRequestV2{
+	required int32 offset = 1;
+	required int32 limit = 2;	
+}
+
+message DiscoverLendableBooksByContactResponseV2{
+	required int32 contactCount = 1;
+	repeated DiscoverLendableContactListV2 contacts = 2;
+	
+}	
+message DiscoverLendableContactListV2{	
+	required DiscoverLendableContactInfoV2 contactInfo = 1;
+	repeated DiscoverLendableBookInfoV2 books = 2;
+}
+
+message DiscoverLendableBookInfoV2{
+	required string ean = 1;
+	required string author = 2;
+	required string title = 3;
+	optional string imageUrl = 4;
+	optional bool productTypeSupported = 5;
+}
+
+message DiscoverLendableContactInfoV2{
+	required int64 accountId = 1;
+	optional string firstName = 2;
+	optional string lastName = 3;
+	required string email = 4;
+	optional string profileUrl = 5;
+	optional int64 profileHash = 6;
+}

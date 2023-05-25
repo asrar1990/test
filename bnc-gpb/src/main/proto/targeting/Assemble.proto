@@ -1,0 +1,16 @@
+package targeting;
+option java_package = "com.bn.gpb.targeting";
+option java_outer_classname = "GpbAssemble";
+option optimize_for = LITE_RUNTIME;
+
+
+message AssembleRequestV1 {
+    required string path = 1;   // the context path to fetch (e.g. "/shop/books")
+    optional string params = 2; // URL encoded key/value pairs (e.g. "refinement=123&foo=bar")
+}
+
+message AssembleResponseV1 {
+    required string body = 1;       // the main body of the response
+    optional string params = 2;     // URL encoded key/value pairs
+    optional int32 timeToCacheInSeconds = 3;    // how long this response should be cached for on the device, in seconds
+}

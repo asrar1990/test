@@ -1,0 +1,22 @@
+package p13n;
+option java_package = "com.bn.gpb.p13n.v2";
+option java_outer_classname = "PnR";
+option optimize_for = LITE_RUNTIME;
+
+import "product/ProductInfoV2.proto";
+import "p13n/PnR.proto";
+import "envelope/envelope.proto";
+
+message GetProductRecommendationsV2 {
+	optional string ean=1;
+	required ProductRecommendationTypeV1 type=2;
+	optional int32 limit=3;
+	optional string listIdHash=4; //new field for pnr
+    optional envelope.RequestNotificationV1 requestNotification=5; //new field used purely to track usage across pnr
+    repeated string eans=6;
+}
+
+message GetProductRecommendationsResponseV2 {
+	repeated productinfo.ProductV2 products=1;
+	optional string listIdHash=2; //new field for pnr
+}

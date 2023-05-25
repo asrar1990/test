@@ -1,0 +1,493 @@
+package account;
+option java_package = "com.bn.gpb.account";
+option java_outer_classname = "GpbAccount";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+import "product/ProductInfo.proto";
+import "product/ProductInfoV2.proto";
+
+//SecurityQuestion Request
+message SecurityQuestionRequestV1 {
+	optional int32 id=1;
+}
+
+//Security Question Response
+message SecurityQuestionResponseV1 {
+	repeated SecurityQuestionV1 question=1;
+}
+
+message SecurityQuestionV1 {
+	required int32 id=1;
+	required string question=2;
+}
+
+message MySecurityQuestionRequestV1 {
+    optional string email=1;
+    optional string partnerId=2;
+}
+
+message MySecurityQuestionResponseV1 {
+    optional int32 securityId=1;
+    optional string question=2;
+}
+
+message PasswordResetRequestV1 {
+    required string email=1;
+    required string securityAnswer=2;
+    required string newPassword=3;
+    optional string partnerId=4;
+}
+
+message PasswordResetResponseV1 {
+    optional int32 status=1;
+}
+
+message PasswordResetEmailRequestV1 {
+    optional string email=1;
+    optional string partnerId=2;
+}
+
+message PasswordResetEmailResponseV1 {
+    optional int32 status=1;
+}
+
+
+//IsEmailAvailable Request 
+message IsEmailAvailableRequestV1 {
+	required string email=1;
+}
+
+//IsEmailAvailable Response 
+message IsEmailAvailableResponseV1 {
+    required int32 isAvailable=1;
+    repeated FederatedPartnerId partnerId=2; //list of partnerIds that the email is associated with
+}
+
+//CreateAccount Request
+message CreateAccountRequestV1 {
+	required commons.AccountV1 account=1;	//custId if available
+	required commons.DeviceV1 device=2;		//serial#
+	required string password=3;
+	required int32  securityQuestionId=5;
+	required string securityAnswer=6;
+	required string userRand=7;				//random value
+	required string userHash=8;				//encrypt (serial#,model,rand#) with secret key
+	optional bool   privacy=9;
+}
+
+//CreateAccount Response 
+message CreateAccountResponseV1 {
+	optional commons.AccountV1 account=1;           //return account detail
+    optional commons.AuthTokenV1 accountToken=2;
+    repeated PartnerTokenV1 partnerToken=3;         //(NEW will be returning both the device and user VOD token)
+    repeated commons.ExtraInfoV1 extraInfo=4;       //additional data
+    repeated string promotions=5;                   //promotion codes
+}
+
+//Register User Device Request 
+message RegisterAccountDeviceRequestV1 {
+	required commons.AccountV1 account=1;	//need email
+	required commons.DeviceV1 device=2; 	//need serial #
+	required string password=3;
+	required string userRand=4;				//random value
+	required string userHash=5; 			//encrypt (serial#, model#, rand#) with hashPrivateKey
+}
+
+//Register User Device Response 
+message RegisterAccountDeviceResponseV1 {
+	optional commons.AccountV1 account=1;			//return account detail
+	optional commons.AuthTokenV1 accountToken=2;
+	repeated PartnerTokenV1 partnerToken=3;         //(NEW will be returning both the device and user VOD token)
+	repeated LinkedAccountV1 linkedAccount=4;       //information on what is linked to this account
+	repeated commons.ExtraInfoV1 extraInfo=5;       //additional data
+	repeated string promotions=6;                   //promotion codes
+}
+
+//partner auth
+message PartnerTokenV1 {
+    optional string tokenType=1;
+    optional string token=2;
+}
+
+//AccountAuth Request
+message AccountAuthRequestV1 {
+	optional commons.AccountV1 account=1;	//custId if available
+	required commons.DeviceV1 device=2;		//serial#
+	required string userRand=3;				//random value
+	required string userHash=4;				//encrypt (serial#,model,rand#) with secret key
+}
+
+//AccountAuth Response 
+message AccountAuthResponseV1 {
+	optional commons.AccountV1 account=1;
+    optional commons.AuthTokenV1 accountToken=2;  
+}
+
+message GetAuthRequestV1 {
+    required string password=1;
+    required string email=2;
+    required string serialNum=3;
+}
+
+message GetAuthResponseV1 {
+    optional commons.AuthTokenV1 deviceToken=1;
+    optional commons.AuthTokenV1 accountToken=2;
+    optional string countryOfResidence=3;
+    repeated commons.ExtraInfoV1 extraInfo=4;
+}
+
+message IsDeviceRegisteredRequestV1 {
+    required string token=1; //hashed 'serialNumber:timestamp'
+    required string serialNum=2;
+    required string model=3;
+}
+
+message IsDeviceRegisteredResponseV1 {
+    optional commons.AccountV1 account=1; //email,firstName, lastName, custId
+    optional commons.DeviceV1 device=2;  //serialNum,model,deviceId
+}
+
+//UnRegister User Device Request 
+message UnRegisterAccountDeviceRequestV1 {
+}
+
+//UnRegister User Device Response 
+message UnRegisterAccountDeviceResponseV1 {
+    optional int32	status=1; 
+}
+
+//promotion
+message accountPromoRequestV1 {
+	optional bool wantPromo=1;
+}
+
+message accountPromoResponseV1 {
+	optional int32 status=1;
+}
+
+//PreReg setup
+message PreRegSetupRequestV1 {
+}
+
+message PreRegSetupResponseV1 {
+	optional int32 status=1;
+}
+
+//HeartBeat setup
+message HeartBeatRequestV1 {
+}
+
+message HeartBeatResponseV1 {
+	optional int32 status=1;
+}
+
+//Privacy setup
+message PrivacyRequestV1 {
+	optional bool enableIt=1;
+}
+
+message PrivacyResponseV1 {
+	optional bool privacy=1;
+}
+
+//VerifyAccount setup
+message VerifyAccountRequestV1 {
+	required string password=1;
+}
+
+message VerifyAccountResponseV1 {
+	optional bool valid=1;
+}
+
+//update password
+message UpdatePasswordRequestV1 {
+	required string newPassword=1;
+}
+
+message UpdatePasswordResponseV1 {
+	optional int32 status=1;
+}
+
+//update email request
+message UpdateEmailRequestV1 {
+	required string newEmail=1;
+}
+
+message UpdateEmailResponseV1 {
+	optional int32 status=1;
+}
+
+//get UTC time request
+message GetUTCTimeRequestV1 {
+}
+
+message GetUTCTimeResponseV1 {
+	optional int64 lngUtcTime=1;
+	optional string strUtcTime=2;
+}
+
+//Associate portal to web reader
+message AssociatePortalToWRRequestV1 {
+}
+
+message AssociatePortalToWRResponseV1 {
+	required bool status=1;
+}
+
+//Get Identity Token
+message PaymentUrlRequestV1 {
+    optional bool getToken=1;
+    optional string countryOfResidence=2;
+}
+
+//Identity Token Response
+message PaymentUrlResponseV1 {
+    optional string	token=1;
+    optional string targetUrl=2;
+    optional string countryOfResidence=3;
+}
+
+//Get AccountHash
+message AccountHashRequestV1 {
+}
+
+message AccountHashResponseV1 {
+    optional string accountHash=1;
+}
+
+//Store account eula options
+message EulaOptionsRequestV1 {
+    repeated commons.ExtraInfoV1 choice=1;
+}
+
+message EulaOptionsResponseV1 {
+}
+
+
+//Login/Create account Request
+message LoginCreateAccountRequestV1 {
+	required commons.AccountV1 account=1;	//custId if available
+	required commons.DeviceV1 device=2;		//serial#
+	optional bool privacy=3;
+}
+
+//CreateAccount Response
+message LoginCreateAccountResponseV1 {
+	optional commons.AccountV1 account=1;           //return account detail
+    optional commons.AuthTokenV1 accountToken=2;
+    optional bool accountAlreadyLinked=3;
+}
+
+message DoesLiveIdAccountExistRequestV1 {
+	required string liveIdToken=1;
+}
+
+message DoesLiveIdAccountExistResponseV1 {
+    required bool exists=1;
+    optional string linkedNookEmailAddress=2;  // if the live id email account is linked to a Nook account, return the Nook email address here
+}
+
+//Change country of residence
+message ChangeCORRequestV1 {
+    required string countryOfResidence=1;
+}
+
+message ChangeCORResponseV1 {
+    optional string retailerid=1;
+}
+
+message LinkedAccountV1 {
+    required string linkType=1;
+    optional string linkId=2;
+    optional string linkToken=3;
+}
+
+message LinkAccountRequestV1{
+    required string partnerId=1;
+    required string email=2;
+    optional string password=3;
+}
+
+message LinkAccountsResponseV1{
+    required commons.AccountV1 account=1;
+    required commons.AuthTokenV1 accountToken=2;
+}
+
+message GetLinkAccountsRequestV1{
+}
+
+message GetLinkAccountsResponseV1{
+    repeated commons.AccountV1 account=1;
+}
+
+message UnLinkAccountRequestV1{
+    required string email=1;
+    required string partnerId=2;
+    optional string customerId=3;
+}
+
+message UnLinkAccountResponseV1{
+    optional bool status=1;
+}
+
+message IsCOPPACompliantRequestV1 {
+}
+
+message IsCOPPACompliantResponseV1 {
+    required bool isCompliant=1;
+    optional string ean=2;
+}
+
+message GetShortLivedTokenRequestV1 {
+}
+
+message GetShortLivedTokenResponseV1 {
+    required string token=1;
+}
+
+
+enum FederatedPartnerId {
+    BN=0;
+    FACEBOOK=1;
+    GOOGLE=2;
+    TEST=-1;
+    TEST_ACCT_EXISTS=-2;
+}
+
+message FederatedLogin {
+    required commons.DeviceV1 device=1;     //serial#
+    required FederatedPartnerId partnerId=2;//enum
+    required string accessToken=3;
+    optional string id=4;                   //this is the user ID returned from Facebook/Google+, server will use this to verify accessToken belongs to intended user.
+    required string userRand=5;             //random value
+    required string userHash=6;             //encrypt (serial#,model,rand#) with secret key
+    optional bool createAccount=7;          //set to true when you know that the email exists with a different partnerID and you want to create a brand new account anyway.
+}
+
+message FederatedLoginResponse {
+    optional commons.AccountV1 account=1;         //return account detail
+    optional commons.AuthTokenV1 accountToken=2;
+    repeated string promotions=3;
+    repeated FederatedPartnerId partnerId=4;      //partnerIds also associated with this email.
+    optional string emailThatAlreadyExists=5;      //email that exists with a different partnerId
+    optional bool newAccountCreated=6;            // true if a new account was created
+}
+
+message FederatedLinkAccountRequestV1 {
+    required FederatedPartnerId partnerId=1;
+    required string id=2;           //either BN email or UID from Facebook/Google+
+    required string accessToken=3;  //if id is to a BN account accessToken is their password.
+}
+
+message FederatedLinkAccountResponseV1 {
+    optional commons.AccountV1 account=1;
+    optional commons.AuthTokenV1 accountToken=2;
+    repeated commons.AccountV1 linkedAccounts=3;
+}
+
+message FederatedUnLinkAccountRequestV1 {
+    required int64 accountId=1; //accountID of account to unlink
+    optional bool force=2;//if true will unlink merged accounts this if for the convenience of QA
+}
+
+message FederatedUnLinkAccountResponseV1 {
+    repeated commons.AccountV1 linkedAccounts=1; //list of linked accounts
+}
+
+message GetPasswordInfoRequestV1 {
+}
+
+message GetPasswordInfoResponseV1 {
+    required string message=1;      // Response from caliber
+    required string regex=2;
+}
+
+// Social Account Login Request
+message SocialLoginRequestV1 {
+    required commons.AccountV1 account=1; // email address and partnerId . BNCloud default to BN2 if its blank
+    required commons.DeviceV1 device=2;   // deviceId , serialNum , buildNumber
+    optional string password=3;
+    optional string userRand=4;
+    optional string userHash=5;
+    required string uid=6;
+    optional string uidSignature=7;
+    optional string uidSignatureTimestamp=8;
+    optional string loginMode=9;
+    optional string provider=10;
+    optional string clientAppKeyName=11;
+    optional string previousUID=12;
+}
+
+// Social Account Login Response
+message SocialLoginResponseV1 {
+    optional commons.AccountV1 account=1;           //return account detail
+    optional commons.AuthTokenV1 accountToken=2;    //token, type, Token Expire time
+    repeated commons.ExtraInfoV1 extraInfo=3;       //additional data
+    repeated string promotions=4;                   //promotion codes
+    optional string previousUID=5;
+    repeated string conflictingProviders=6;         //Based on the authenticate by field client should challenge the customer
+    optional bool autoGenerated=7;               //True if SITE in conflictingProviders list was customer created , False if SITE was created implicitly.
+}
+
+message GetCreditSubscriptionRequestV1 {
+}
+
+message CreditSubscriptionResponseV1 {
+    optional int32 totalAvailableCredit=1;
+    optional int32 totalCreditExpired=2;
+    optional string subscriptionStatus=3;
+    optional string subscriptionType=4;
+    optional string subscriptionMessage=5;
+    optional int64 creditExpireDate=6;
+    optional bool isUpgradeEligible=7;
+    optional bool isDowngradeEligible=8;
+    optional string upGradeEans=9;
+    optional string downGradeEans=10;
+    optional bool isFreeTrialEligible=11;
+    optional int64 subscriptionPurchaseDate=12;
+    optional int64 renewDate=13;
+    optional float subscriptionPrice=14;
+    optional string currentSubscriptionEan=15;
+    optional int64 canceledSubscriptionDate=16;
+    repeated SubscriptionOrderDetailsV1 subscriptionDetails=17;
+    optional int32 expiryDays=18;
+}
+
+message SubscriptionOrderDetailsV1 {
+    repeated SubscriptionTransactionDetailsV1 subscriptionTransactionDetailsV1=1;
+    optional int64 creationDate=2;
+    required string ean=3;
+    optional float price=4;
+    optional string status=5; // ACTIVE OR INACTIVE
+    optional int32 totalCredits=6;
+    optional int32 usedCredits=7;
+    optional int32 availableCredits=8;
+}
+
+message SubscriptionTransactionDetailsV1 {
+    repeated AudioBookPurchaseDetailsV1 audioBookPurchaseDetailsV1=1;
+    optional int64 creationDate=2;
+    optional int64 expireDate=3;
+    optional bool expired=4; // true or false
+    optional int32 planCredits=5; // paid + free
+}
+
+message AudioBookPurchaseDetailsV1 {
+    optional productinfo.ProductV2 product=1;
+    optional int64 purchasedDate=2;
+    optional int32 numberOfCredit=3;
+}
+
+message CreditSubscriptionOptionsRequestV1 {
+}
+
+message CreditSubscriptionOptionsResponseV1 {
+    repeated MasterSubscriptionDetailsV1 masterDetails=1;
+}
+
+message MasterSubscriptionDetailsV1 {
+    optional string ean=1;
+    optional float onlinePrice=2;
+    optional int32 numberOfCredits=3;
+}

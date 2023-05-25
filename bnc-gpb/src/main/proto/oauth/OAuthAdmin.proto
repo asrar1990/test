@@ -1,0 +1,18 @@
+package oauth;
+option java_package = "com.bn.gpb.oauth";
+option java_outer_classname = "GpbOAuthAdmin";
+option optimize_for = LITE_RUNTIME;
+
+message UnlinkOAuthAccountRequestV1{
+	required int64 accountId = 1;
+	required int32 networkProvider = 2;
+}
+
+message UnlinkOAuthAccountResponseV1{
+	required UnlinkOAuthAccountStatusV1 status = 1;
+}
+
+enum UnlinkOAuthAccountStatusV1{
+	FAILURE = 0;
+	SUCCESS = 1;
+}

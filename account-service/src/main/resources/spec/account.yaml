@@ -1,0 +1,200 @@
+openapi: 3.0.0
+info:
+  title: Account API
+  version: 1.0.0
+servers:
+  - url: 'https://nook-apim-dev-eastus.azure-api.net'
+paths:
+  /account/endpointRegisterAccount:
+    post:
+      summary: API for Account Creation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterAccountRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterAccountResponse'
+        'default':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /account/createAccountProfile:
+    post:
+      summary: API for Profile Creation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountProfileRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAccountProfileResponse'
+        'default':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    CreateAccountProfileRequest:
+      type: object
+      properties:
+        profileType:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+      required:
+        - profileType
+        - firstName
+        - lastName
+    SyncItem:
+      type: object
+      properties:
+        luid:
+          type: string
+        guid:
+          type: string
+        modTime:
+          type: string
+        data:
+          type: string
+        categoryType:
+          type: string
+        action:
+          type: string
+        profileId:
+          type: string
+    Account:
+      type: object
+      properties:
+        email:
+          type: string
+        custId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        accountId:
+          type: integer
+          format: int64
+        accountHash:
+          type: string
+      required:
+        - email
+        - custid
+        - firstName
+        - lastName
+    Device:
+      type: object
+      properties:
+        serialNumber:
+          type: string
+        softwareVersion:
+          type: string
+        model:
+          type: string
+        buildNumber:
+          type: string
+        hashPrivateKey:
+          type: string
+        deviceId:
+          type: integer
+          format: int64
+      required:
+        - serialNum
+        - softwareVersion
+        - model
+        - deviceId
+    CreateAccountProfileResponse:
+      type: object
+      properties:
+        resultCode:
+          type: string
+        syncItem:
+          $ref: '#/components/schemas/SyncItem'
+      required:
+        - resultCode
+        - syncItem
+    RegisterAccountRequest:
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Account'
+        device:
+          $ref: '#/components/schemas/Device'
+        password:
+          type: string
+        userRand:
+          type: string
+        userHash:
+          type: string
+      required:
+        - account
+        - device
+        - password
+    RegisterAccountResponse:
+      type: object
+      properties:
+        account:
+          $ref: '#/components/schemas/Account'
+        authToken:
+          type: object
+          properties:
+            token:
+              type: string
+            type:
+              type: string
+            tokenExpireTime:
+              type: string
+            duration:
+              type: string
+        extraInfo:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+              type:
+                type: string
+            required:
+              - key
+              - value
+              - type
+        promotions:
+          type: string
+      required:
+        - account
+          - authToken
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Response status
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Response message

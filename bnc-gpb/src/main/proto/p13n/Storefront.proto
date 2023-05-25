@@ -1,0 +1,24 @@
+package p13n;
+option java_package = "com.bn.gpb.p13n";
+option java_outer_classname = "Storefront";
+option optimize_for = LITE_RUNTIME;
+
+import "product/ProductInfo.proto";
+
+message GetAllShopMerchandisingV1 {
+	optional int32 storeId=1;
+}
+
+message GetAllShopMerchandisingResponseV1 {
+	optional ShopPromoListV1 promos=1;
+    optional DisplayTableListV1 tables=2;
+    optional int64 expiryTime=3;
+}
+
+message ShopPromoListV1 {
+	repeated string shopPromoUrls=1;
+}
+
+message DisplayTableListV1 {
+    repeated string displayTableUrls=1;
+}

@@ -1,0 +1,339 @@
+package productinfo;
+option java_package = "com.bn.gpb.productinfo";
+option java_outer_classname = "ProductInfo";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+
+//****** GET CURATED LISTS (A1) ******
+message CuratedListV1 {
+    optional string hash=1;
+    optional int32 pid=2;
+}
+
+message CuratedListResponseV1 {
+    required int32 total=1;
+    optional CuratedDataListV1 curatedList=2;
+    required string hash=3;
+    required int64 expiryTime=4;
+}
+
+message CuratedDataListV1 {
+    repeated CuratedDataItemV1 item=1;
+}
+
+enum DisplayType {
+    INSTORE=1;
+    SHOP_PROMO_STATIC=2;
+}
+
+message CuratedDataItemV1 {
+    required int32 id=1;
+    required string name=2;
+    required string description=3;
+    optional string imageUrl=4;
+    optional ProductTypeV1 department=5;
+    optional DisplayType type=6;
+}
+
+message CuratedDataListDetailsV1 {
+    required int32 id=1;
+    required int32 offset=2;
+    required int32 limit=3;
+    optional string hash=4;
+}
+
+message CuratedDataListDetailsResponseV1 {
+    required int32 offset=1;
+    required int32 limit=2;
+    required int32 total=3;
+    optional string name=4;
+    optional string description=5;
+    optional ProductListV1 items=6;
+    required string hash=7;
+    required int64 expiryTime=8;
+}
+
+//****** GET PRODUCT DETAILS (A1) ******
+message ProductDetailsRequestV1 {
+    required string ean=1;
+    optional string hash=2;
+    optional bool force=3;
+}
+
+message ProductDetailsResponseV1 {
+    optional ProductV1 product=1;
+    required string hash=2;
+    required int64 expiryTime=3;
+}
+
+//****** GET PRODUCT DETAILS LIST (A1) ******
+message ProductDetailsListRequestV1 {
+    required eanList ean=1;
+}
+
+message ProductDetailsListResponseV1 {
+    optional ProductListV1 products=1;
+    optional eanList invalidEan=2;
+}
+
+message eanList {
+    repeated string ean=1;
+}
+
+message ProductV1 {
+    required string ean=1;
+    optional string sampleEan=2;
+    optional string issueEan=3;
+    optional string dateOfCurrentIssue=4;
+    optional float issuePrice=5;
+    optional string subscriptionEan=6;
+    optional DeliveryFrequency frequency=7 [default = NONE];
+    required bool availableForSale=8;
+    required ProductTypeV1 productType=9;
+    optional string productCode=10;
+    optional string formatCode=11;
+    optional int32 fileSize=12;
+    optional int32 pageCount=13;
+    repeated string titles=14;
+    optional string seriesTitle=15;
+    optional string publisher=16;
+    optional int64 publishedDate=17;
+    optional string soldBy=18;
+    optional ContributorListV1 contributors=19;
+    optional CategoryListV1 categories=20;
+    required bool isRecentlyReleased=21;
+    required bool isComingSoon=22;
+    required bool isBrowsable=23;
+    required bool isLendable=24;
+    required bool isFreeProduct=25;
+    required float onlinePrice=26;
+    optional float listPrice=27;
+    optional int32 salesRank=28;
+    optional int32 ratingCount=29;
+    optional float avgRating=30;
+    optional string shortSynopsis=31;
+    optional ImageV1 smallImage=32;
+    optional ImageV1 largeImage=33;
+    optional int32 browseMinutes=34;
+    optional int32 loanDays=35;
+    optional int32 ageMin=36;
+    optional int32 ageMax=37;
+    optional float subscriptionPrice=38;
+    optional string deliveryFrequency=39;
+    optional float discountAmt=40;
+    optional float discountPercent=41;
+}
+
+message LibraryProductV1 {
+    required string ean=1;
+    optional DeliveryFrequency frequency=2 [default = NONE];
+    required ProductTypeV1 productType=3;
+    optional string productCode=4;
+    optional string formatCode=5;
+    optional int32 fileSize=6;
+    optional int32 pageCount=7;
+    repeated string titles=8;
+    optional string seriesTitle=9;
+    optional string publisher=10;
+    optional int64 publishedDate=11;
+    optional ContributorListV1 contributors=12;
+    optional string category=13;
+    optional int32 ratingCount=14;
+    optional float avgRating=15;
+    optional string shortSynopsis=16;
+    optional string sampleEan=17;
+    optional string soldBy=18;
+    optional ImageV1 smallImage=19;
+    optional ImageV1 largeImage=20;
+    optional string deliveryFrequency=21;
+}
+
+message ProductListV1 {
+    repeated ProductV1 item=1;
+}
+
+message ContributorListV1 {
+    repeated ContributorV1 contributor=1;
+}
+
+message ContributorV1 {
+    optional string id=1;
+    optional string firstName=2;
+    required string lastName=3;
+    optional string middleName=4;
+    optional string role=5;
+    optional int32 type=6;
+    optional int32 displayOrder=7;
+}
+
+message ImageListV1 {
+    repeated ImageV1 image=1;
+}
+
+message ImageV1 {
+    required string url=1;
+    optional int32  height=2;
+    optional int32  width=3;
+    optional string  altText=4;
+    required commons.ImageType imageType=5;
+}
+
+message ImagePairV1 {
+    optional ImageV1 smallImage=1;
+    optional ImageV1 largeImage=2;
+}
+
+enum DeliveryFrequency {
+    NONE=1;
+    DAILY=2;
+    WEEKLY=3;
+    MONTHLY=4;
+    QUARTERLY=5;
+    BIWEEKLY=6;
+    BIMONTHLY=7;
+}
+
+message ProductSynopsisRequestV1 {
+    required string ean=1;
+    optional string hash=2;
+}
+
+message ProductSynopsisResponseV1 {
+    required string ean=1;
+    optional string synopsis=2;
+    required string hash=3;
+    required int64 expiryTime=4;
+}
+
+//****** GET CUSTOMER REVIEWS (A1) ******
+message CustomerReviewRequestV1 {
+    required string ean=1;
+    required int32 page=2;
+    required int32 pageSize=3;
+    optional string hash=4;
+    repeated string customerIds=5;
+    optional int32 sortOrder=6;
+    optional int32 rating=7;
+}
+
+message CustomerReviewResponseV1 {
+    required int32 total=1;
+    required int32 page=2;
+    required int32 pageSize=3;
+    required string ean=4;
+    optional CustomerReviewListV1 reviews=5;
+    required string hash=6;
+    required int64 expiryTime=7;
+    optional int32 rating=8;
+    optional int32 rating1count=9;
+    optional int32 rating2count=10;
+    optional int32 rating3count=11;
+    optional int32 rating4count=12;
+    optional int32 rating5count=13;
+}
+
+message CustomerReviewV1 {
+    required string penName=1;
+    required string header=2;
+    required string text=3;
+    required int64 reviewDate=4;
+    required int32 rating=5;
+}
+
+
+message CustomerReviewListV1 {
+    repeated CustomerReviewV1 reviews=1;
+}
+
+message CustomerReviewResponseV2 {
+    required int32 total=1;
+    required int32 page=2;
+    required int32 pageSize=3;
+    required string ean=4;
+    optional CustomerReviewListV2 reviews=5;
+    required string hash=6;
+    required int64 expiryTime=7;
+    optional int32 rating=8;
+    optional int32 rating1count=9;
+    optional int32 rating2count=10;
+    optional int32 rating3count=11;
+    optional int32 rating4count=12;
+    optional int32 rating5count=13;
+}
+message CustomerReviewV2 {
+    required string penName=1;
+    required string header=2;
+    required string text=3;
+    required int64 reviewDate=4;
+    required int32 rating=5;
+    optional string customerId=6;
+    optional bool isNookFriend=7;
+    optional string imageUrl=8;
+    optional int64 accountId=9;
+    optional string firstName=10;
+    optional string lastName=11;
+    optional int64 reviewId=12;
+    optional string ean=13;    // ****************  used for audio book project and instore implementation. proto alone added, no implementation.  ****************
+    optional ProductTypeV1 productType=14; // ****************  used for audio book project and instore implementation. proto alone added, no implementation.   ****************
+}
+message CustomerReviewListV2 {
+    repeated CustomerReviewV2 reviews=1;
+}
+
+//****** GET EDITORIAL REVIEWS (A1) ****** 
+message EditorialReviewRequestV1 {
+    required string ean=1;
+    optional string hash=2;
+}
+
+message EditorialReviewResponseV1 {
+    required string ean=1;
+    optional EditorialReviewListV1 reviews=2;
+    required string hash=3;
+    required int64 expiryTime=4;
+}
+
+message EditorialReviewListV1 {
+    repeated EditorialReviewV1 reviews=1;
+}
+
+message EditorialReviewV1 {
+    required string source=1;
+    required string content=2;
+}
+
+message CategoryListV1 {
+    repeated CategoryV1 category=1;
+}
+
+enum CategoryType{
+    DEPARTMENT=1;
+    CURATEDLIST=2;
+    LISTOFLISTS=3;
+    NULLCAT=-1;
+
+}
+
+message CategoryV1 {
+    required int32 id=1;
+    required string name=2;
+    optional int32 childCount=3;
+    optional ProductTypeV1 productType=4 [default=NULLPTYPE];
+    optional CategoryType categoryType=5 [default=NULLCAT];
+    optional string imageUrl=6;
+    optional int32 rank=7;
+    optional int32 weight=8;
+}
+
+enum ProductTypeV1 {
+    EBOOK=1;
+    EMAGAZINE=2;
+    ENEWS=3;
+    EXTRA=4;
+    AUDIO=8;
+    NKCOMICS=9;
+    EBOOKONLY=10;
+    EBOOKDA=11;
+    NULLPTYPE=-1;
+}

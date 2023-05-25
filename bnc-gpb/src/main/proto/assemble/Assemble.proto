@@ -1,0 +1,43 @@
+package assemble;
+option java_package = "com.bn.gpb.assemble";
+option java_outer_classname = "GpbAssemble";
+option optimize_for = LITE_RUNTIME;
+
+message CategoriesRequestV1 {
+    optional ProfileTypeV1 profileType = 1;
+}
+
+message CategoriesResponseV1 {
+    optional ProfileCategoryInfoV1 adult = 1;
+    optional ProfileCategoryInfoV1 kids = 2;
+}
+
+message ProfileCategoryInfoV1 {
+    optional CategoryInfoV1 ebook=1;
+    optional CategoryInfoV1 audiobook=2;
+}
+
+message CategoryInfoV1 {
+    repeated AllCategoryInfoV1 allCategories=1;
+    repeated TopCategoryInfoV1 topCategories=2;
+}
+
+message AllCategoryInfoV1 {
+    optional string id=1;
+    optional string label=2;
+    optional string position=3;
+    optional string parent=4;
+    repeated string children=5;
+}
+
+message TopCategoryInfoV1 {
+    optional string id=1;
+    optional string label=2;
+    optional string position=3;
+}
+
+enum ProfileTypeV1{
+	KIDS = 1;
+	ADULT = 2;
+	BOTH = 3;
+}

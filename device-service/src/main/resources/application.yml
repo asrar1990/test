@@ -1,0 +1,30 @@
+server:
+  port: 9002
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+spring:
+  application:
+    name: device-service
+  sleuth:
+    sampler:
+      probability: 1.0
+  datasource:
+    url: jdbc:mysql://bncloud.mysql.database.azure.com:3306/bncloud?zeroDateTimeBehavior=convertToNull
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: bncloud
+    password: Adminbn1!
+
+logging:
+  file:
+    path: /var/log
+  pattern:
+    console: '%d{DEFAULT}|%5p|%c{0}:%L|%X{traceId}|%m%n'
+
+# swagger-ui custom path
+springdoc:
+  swagger-ui.path: /swagger-ui.html

@@ -1,0 +1,39 @@
+package notification;
+option java_package = "com.bn.gpb.notification";
+option java_outer_classname = "Notification";
+option optimize_for = LITE_RUNTIME;
+
+
+message clearNotificationRequestV1 {
+	repeated notificationV1 notification=1;
+}
+
+message clearNotificationResponseV1 {
+	required int32 count=1;
+}
+message notificationV1 {
+  required NotificationCategory category=1;
+  required int64 time=2;
+  optional string description=3;
+  optional bool transient=4;
+}
+
+message notificationListV1 {
+  repeated notificationV1 notifications=1;
+}
+
+message addnotificationV1 {
+	required NotificationCategory category=1;
+  	optional string description=4;
+}
+
+message addNotificationRequestV1 {
+    required string client=1;
+	repeated addnotificationV1 notifications=2;
+}
+
+message addNotificationResponseV1 {
+    required int32 total=1;
+}
+
+enum NotificationCategory { SW=0;SYNC=1;CCH=2;ABC=3;REFCR=4;SQFR=5;SYNC_TIME=6;SYNC_RP=7;SYNC_BO=8;SYNC_AN=9;SYNC_LO=10;LRFR=11;LIST=12;SYSTEM_SOFTWARE=13;SYNC_DC=14;SYNC_DC_TIME=15;PROVISION=16;ENTITLEMENT=17;USERPROFILES=18;PARTNER_AUTH=19;PARTNER_DEAUTH=20;SYNC_VL=21;SYNC_VE=22;ACCOUNT_LINK=23;PURCHASE_BLOCK=24;PURCHASE_ALLOW=25;};

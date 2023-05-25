@@ -1,0 +1,16 @@
+package store;
+option java_package = "com.bn.gpb.store";
+option java_outer_classname = "GpbStore";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+
+//InStoreMerchPod Request 
+message InStoreMerchPodRequestV1 {
+	optional string instoreid=1;
+}
+
+//InStoreMerchPod Response 
+message InStoreMerchPodResponseV1 {
+    optional commons.Error error=1;
+}

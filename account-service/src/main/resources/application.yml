@@ -1,0 +1,27 @@
+server:
+  port: 9001
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
+
+spring:
+  application:
+    name: account-service
+  datasource:
+    url: jdbc:mysql://bncloud.mysql.database.azure.com:3306/bncloud?zeroDateTimeBehavior=convertToNull
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: bncloud
+    password: Adminbn1!
+  sleuth:
+    sampler:
+      probability: 1.0
+
+logging:
+  file:
+    path: /var/log
+  pattern:
+    console: '%d{DEFAULT}|%5p|%c{0}:%L|%X{traceId}|%m%n'
+

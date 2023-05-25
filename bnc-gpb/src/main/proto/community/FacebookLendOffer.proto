@@ -1,0 +1,55 @@
+package community;
+option java_package = "com.bn.gpb.community";
+option java_outer_classname = "FacebookLendOffer";
+option optimize_for = LITE_RUNTIME;
+
+import "common/Common.proto";
+
+message FacebookLendOfferRequestV1 {
+  required int64  deliveryId=1;
+  required string ean=2;
+  required string facebookId=3;
+  optional string lendMessage=4;
+}
+message FacebookLendOfferResponseV1{
+	required FacebookLendOfferStatusV1 status = 1;
+}
+
+enum FacebookLendOfferStatusV1{
+	FACEBOOK_LEND_OFFER_SUCCESS = 1;
+}
+
+
+message GetFacebookLendOfferTokenRequestV1{
+	required string ean = 1;
+	required int64 deliveryId = 2;
+}
+
+message GetFacebookLendOfferTokenResponseV1{
+	required string token = 1;
+}
+
+
+message PublicLendOfferRequestV1 {
+  required int64  deliveryId = 1;
+  required string ean = 2;
+  optional string lendMessage = 3;
+  
+}
+message PublicLendOfferResponseV1{
+	required PublicLendOfferStatusV1 status = 1;
+}
+
+enum PublicLendOfferStatusV1{
+	PUBLIC_LEND_OFFER_SUCCESS = 1;
+}
+
+
+message GetPublicLendOfferTokenRequestV1{
+	required string ean = 1;
+	required int64 deliveryId = 2;
+}
+
+message GetPublicLendOfferTokenResponseV1{
+	required string token = 1;
+}

@@ -1,0 +1,42 @@
+package media;
+option java_package = "com.bn.gpb.media";
+option java_outer_classname = "MediaInfo";
+option optimize_for = LITE_RUNTIME;
+
+message GetInstantWatchRequestV1 {
+    required int32 offset = 1;
+    required int32 limit = 2;    
+}
+ 
+message GetInstantWatchResponseV1 {
+    required int32 totalResults = 1;
+    repeated MovieV1 watchedItems = 2;
+    repeated MovieV1 nextEpisodes = 3;
+}
+
+message GetMoviesForMoreRequestV1 {
+  
+}
+
+message GetMoviesForMoreResponseV1 {
+	required bool isAuthenticated = 1;
+	required bool isPersonalizedData = 2;
+    required int64 cacheTimeout = 3;
+    repeated MovieV1 recentlyWatched = 4; 
+    repeated MovieV1 suggestions = 5; 
+}
+
+message MovieV1 {
+    required string id = 1;
+    required string type = 2;
+    required string title = 3;
+    optional string synopsis = 4;
+    optional string thumbImage = 5;
+    optional string largeImage = 6;
+    optional int64 watchedDate = 7;
+    optional float avgUserRating = 8;
+    optional string releasedDate = 9;
+    optional string mpaaRating = 10;
+    optional int32 season = 11;
+    optional int32 episode = 12;
+}

@@ -1,0 +1,15 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/sarantechos/cloud-config
+          username: sarantechos
+          password: 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
+          clone-on-start: true
+          default-label: master

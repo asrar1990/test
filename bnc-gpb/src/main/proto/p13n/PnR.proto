@@ -1,0 +1,102 @@
+package p13n;
+option java_package = "com.bn.gpb.p13n";
+option java_outer_classname = "PnR";
+option optimize_for = LITE_RUNTIME;
+
+import "product/SearchV2.proto";
+import "product/ProductInfo.proto";
+import "product/ProductInfoV2.proto";
+import "community/SocialActivity.proto";
+import "envelope/envelope.proto";
+
+message GetProductRecommendationsV1 {
+	required string ean=1;
+	required ProductRecommendationTypeV1 type=2;
+	optional int32 limit=3;
+}
+
+message GetProductRecommendationsResponseV1 {
+	optional productinfo.ProductListV1 products=1;
+}
+
+enum ProductRecommendationTypeV1 {
+	VIEW_TO_VIEW=1;
+	BUY_TO_BUY=2;
+}
+
+//******** new for gossamer
+
+//*** PRODUCTS RELATED TO GIVEN EAN 
+message GetRelatedProductsV1 {
+    optional string ean=1;
+    optional string type=2 [default = "CP"]; //CP/CV
+    optional int32 limit=3;
+    optional string hash=4;
+    optional string listIdHash=5;
+    optional envelope.RequestNotificationV1 requestNotification=6; //new field used purely to track usage across pnr
+    repeated string eans=7;
+}
+
+message GetRelatedProductsResponseV1 {
+    repeated productinfo.ProductV2 relatedProducts=1;
+    required string hash=2;
+    required int64 expiryTime=3;
+    optional string listIdHash=4;
+    repeated search.ListDetailsProducts productList=5;
+}
+
+//*** PRODUCTS RELATED TO EAN FROM CUSTOMER�S HISTORY OF ACTIVITY
+message GetCustomerProductRecommendationsV1 {
+    optional string type=1 [default = "CP"]; //CP/CV
+    optional int32 months=2 [default = 0]; //assume that for now they�ll not pass this and we will default the behavior in the cloud
+    optional int32 limit=3;
+    optional string hash=4;
+    optional string listIdHash=6;
+    optional envelope.RequestNotificationV1 requestNotification=7; //new field used purely to track usage across pnr
+
+}
+
+message GetCustomerProductRecommendationsResponseV1 {
+    optional productinfo.ProductV2 basisProduct=1;
+    repeated productinfo.ProductV2 relatedProducts=2;
+    required string hash=3;
+    required int64 expiryTime=4;
+    optional string listIdHash=5;
+
+}
+
+message GetCustomerCategoryAffinityRecommendationsV1 {
+	optional int32 nLists=1 [default = 1];
+    optional int32 limit=2;
+    optional string hash=3;
+}
+
+message GetCustomerCategoryAffinityRecommendationsResponseV1 {
+	repeated productinfo.CuratedDataListDetailsResponseV2 lists=1;
+}
+
+message GetProductRecommendationsUberV1 {
+    repeated GetCustomerProductRecommendationsV1 customerRequests=1;
+    optional GetCustomerCategoryAffinityRecommendationsV1 categoryAffinityRequest=2;
+    optional community.SocialRecommendationsRequestV1 socialNetworkRequest=3;
+}
+
+message GetProductRecommendationsUberResponseV1 {
+    repeated GetCustomerProductRecommendationsResponseV1 customerResponses=1;
+    optional GetCustomerCategoryAffinityRecommendationsResponseV1 categoryAffinityResponse=2;
+    optional community.SocialRecommendationsResponseV1 socialNetworkResponse=3;
+}
+
+message MultiEanCustomerProductRecommendationsRequestV1{
+    optional int32 offset=1;
+    optional int32 limit=2;
+    optional string hash=3;
+    optional string listIdHash=4;
+    optional envelope.RequestNotificationV1 requestNotification=7; //new field used purely to track usage across pnr
+}
+message MultiEanCustomerProductRecommendationsResponseV1{
+	repeated productinfo.ProductV2 products=1;
+	optional string listIdHash=2; //new field for pnr
+	optional string hash=3;
+	optional int64 expiryTime=4;
+}

@@ -1,0 +1,13 @@
+package abc;
+option java_package = "com.bn.gpb.abc";
+option java_outer_classname = "GpbAbcAdmin";
+option optimize_for = LITE_RUNTIME;
+
+message CloneAddrBookRequestV1{
+	required int64 sourceAccountId = 1;
+	repeated int64 cloneAccountId = 2;
+}
+
+message CloneAddrBookResponseV1{
+	repeated int64 results = 1;
+}
